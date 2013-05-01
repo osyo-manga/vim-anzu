@@ -69,10 +69,10 @@ anzu#clear_search_status()			*anzu#clear_search_status*
 	ステータス情報を更新します。
 	基本的には |n| や |N| と併用して使用します。
 
-<Plug>(anzu-echo-serach-status)			*<Plug>(anzu-echo-serach-status)*
+<Plug>(anzu-echo-search-status)			*<Plug>(anzu-echo-search-status)*
 	ステータス情報をコマンドラインへ出力します。
 
-<Plug>(anzu-update-serach-status-with-echo)	*<Plug>(anzu-update-serach-status-with-echo)*
+<Plug>(anzu-update-search-status-with-echo)	*<Plug>(anzu-update-search-status-with-echo)*
 	ステータス情報を更新後にコマンドラインへと出力します。
 	Example: >
 		nmap g* g*<Plug>(anzu-update-search-status-with-echo)
