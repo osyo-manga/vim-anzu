@@ -30,6 +30,10 @@ Example: >
 	nmap * <Plug>(anzu-star)
 	nmap # <Plug>(anzu-sharp)
 
+	" g* 時にステータス情報を出力する場合
+	nmap g* g*<Plug>(anzu-update-search-status-with-echo)
+
+
 	" ステータス情報を statusline へと表示する
 	set statusline=%{anzu#search_status()}
 	
@@ -71,10 +75,20 @@ anzu#clear_search_status()			*anzu#clear_search_status*
 
 <Plug>(anzu-echo-search-status)			*<Plug>(anzu-echo-search-status)*
 	ステータス情報をコマンドラインへ出力します。
+	このマッピングではステータス情報を更新しないので注意して下さい。
+	ステータス情報も更新する場合は
+	|<Plug>(anzu-update-search-status-with-echo)| を使用して下さい。
+
+	Example: >
+		" 前回のステータス情報を再出力する
+		nmap <A-p> <Plug>(anzu-update-search-status-with-echo)
+	<
 
 <Plug>(anzu-update-search-status-with-echo)	*<Plug>(anzu-update-search-status-with-echo)*
 	ステータス情報を更新後にコマンドラインへと出力します。
+
 	Example: >
+		" g* 時にステータス情報を出力する場合
 		nmap g* g*<Plug>(anzu-update-search-status-with-echo)
 	<
 
