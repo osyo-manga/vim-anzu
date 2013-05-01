@@ -1,0 +1,131 @@
+anzu.txt		検索時の位置情報を表示するプラグインです。
+
+==============================================================================
+目次						*anzu-contents*
+
+概要				|anzu-introduction|
+使い方				|anzu-usage|
+インターフェース		|anzu-interface|
+  コマンド			  |anzu-commands|
+  関数				  |anzu-functions|
+  キーマッピング		  |anzu-key-mappings|
+設定				|anzu-setting|
+  変数				  |anzu-variables|
+
+
+==============================================================================
+概要						*anzu-introduction*
+
+検索時に (2/10) のような表示を提供するプラグインです。
+|n| や |N| などにマッピングして使用します。
+
+
+==============================================================================
+使い方						*anzu-usage*
+
+Example: >
+	" n や N の代わりに使用します。
+	nmap n <Plug>(anzu-n)
+	nmap N <Plug>(anzu-N)
+	nmap * <Plug>(anzu-star)
+	nmap # <Plug>(anzu-sharp)
+
+	" ステータス情報を statusline へと表示する
+	set statusline=%{anzu#search_status()}
+	
+	" こちらを使用すると
+	" 移動後にステータス情報をコマンドラインへと出力を行います。
+	" nmap n <Plug>(anzu-n-with-echo)
+	" nmap N <Plug>(anzu-N-with-echo)
+	" nmap * <Plug>(anzu-star-with-echo)
+	" nmap # <Plug>(anzu-sharp-with-echo)
+<
+
+
+==============================================================================
+インターフェース				*anzu-interface*
+
+------------------------------------------------------------------------------
+コマンド					*anzu-commands*
+
+:AnzuClearSearchStatus				*:AnzuClearSearchStatus*
+	ステータス情報をクリアします。
+
+
+------------------------------------------------------------------------------
+関数						*anzu-functions*
+
+anzu#search_status()				*anzu#search_status*
+	現在のステータス情報を文字列で返します。
+
+anzu#clear_search_status()			*anzu#clear_search_status*
+	ステータス情報をクリアします。
+
+
+------------------------------------------------------------------------------
+キーマッピング					*anzu-key-mappings*
+
+<Plug>(anzu-search-status-update)		*<Plug>(anzu-search-status-update)*
+	ステータス情報を更新します。
+	基本的には |n| や |N| と併用して使用します。
+
+<Plug>(anzu-echo-serach-status)			*<Plug>(anzu-echo-serach-status)*
+	ステータス情報をコマンドラインへ出力します。
+
+<Plug>(anzu-update-serach-status-with-echo)	*<Plug>(anzu-update-serach-status-with-echo)*
+	ステータス情報を更新後にコマンドラインへと出力します。
+	Example: >
+		nmap g* g*<Plug>(anzu-update-search-status-with-echo)
+	<
+
+<Plug>(anzu-n)					*<Plug>(anzu-n)*
+	|<Plug>(anzu-search-status-update)| がフックされている以外は |n| と同様
+	の挙動です。
+
+<Plug>(anzu-n-with-echo)			*<Plug>(anzu-n-with-echo)*
+	|<Plug>(anzu-n)| 後にコマンドラインにステータス情報を出力します。
+
+<Plug>(anzu-N)					*<Plug>(anzu-N)*
+	|<Plug>(anzu-search-status-update)| がフックされている以外は |N| と同様
+	の挙動です。
+
+<Plug>(anzu-N-with-echo)			*<Plug>(anzu-N-with-echo)*
+	|<Plug>(anzu-N)| 後にコマンドラインにステータス情報を出力します。
+
+<Plug>(anzu-star)				*<Plug>(anzu-star)*
+	|<Plug>(anzu-search-status-update)| がフックされている以外は |star| と同
+	様の挙動です。
+
+<Plug>(anzu-star-with-echo)			*<Plug>(anzu-star-with-echo)*
+	|<Plug>(anzu-star)| 後にコマンドラインにステータス情報を出力します。
+
+<Plug>(anzu-sharp)				*<Plug>(anzu-sharp)*
+	|<Plug>(anzu-search-status-update)| がフックされている以外は |#| と同様
+	の挙動です。
+
+<Plug>(anzu-sharp-with-echo)			*<Plug>(anzu-sharp-with-echo)*
+	|<Plug>(anzu-sharp)| 後にコマンドラインにステータス情報を出力します。
+
+
+==============================================================================
+設定						*anzu-setting*
+
+------------------------------------------------------------------------------
+変数						*anzu-variables*
+
+g:anzu_status_format				*g:anzu_status_format*
+	ステータス情報のフォーマットを設定します。
+
+	シンボル	展開値~
+	--------	------~
+	%p		検索パターン
+	%i		現在の位置
+	%l		一致した個数
+
+	Default: >
+		let g:anzu_status_format = "%p(%i/%l)"
+	<
+
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
