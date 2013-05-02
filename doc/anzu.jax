@@ -55,6 +55,20 @@ Example: >
 :AnzuClearSearchStatus				*:AnzuClearSearchStatus*
 	ステータス情報をクリアします。
 
+:AnzuUpdateSearchStatus				*:AnzuUpdateSearchStatus*
+	現在のカーソル位置でステータス情報を更新します。
+	カーソル位置が検索位置とマッチした場合にのみ情報が更新されます。
+
+	また、このコマンドだけではステータス情報を出力しないので
+	|anzu#search_status()| と組み合わせて使用して下さい。
+
+	Example: >
+		" カーソルが移動するたびに更新する
+		augroup anzu-update-search-status
+			autocmd!
+			autocmd CursorMoved * :AnzuUpdateSearchStatus|echo anzu#search_status()
+		augroup END
+	<
 
 ------------------------------------------------------------------------------
 関数						*anzu-functions*

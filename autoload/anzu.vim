@@ -24,10 +24,14 @@ function! anzu#update(pattern, cursor_pos)
 		let s:status_cache = "nothing"
 		return
 	endif
+
 	let cursor = getpos(".")
 	let index = index(pos_all, [cursor[1], cursor[2]])
+	if index == -1
+		return
+	endif
+
 	let s:status_cache = substitute(substitute(substitute(g:anzu_status_format, "%p", pattern, "g"), "%i", index+1, "g"), "%l", len(pos_all), "g")
-" 	let s:status_cache = printf("%s:(%d/%d)", pattern, index+1, len(pos_all))
 endfunction
 
 
