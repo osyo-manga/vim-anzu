@@ -16,8 +16,12 @@ anzu.txt		検索時の位置情報を表示するプラグインです。
 ==============================================================================
 概要						*anzu-introduction*
 
-検索時に (2/10) のような表示を提供するプラグインです。
-|n| や |N| などにマッピングして使用します。
+*anzu* は検索時に検索位置を視覚的に分かりやすく補助するためのプラグインで
+す。
+(2/10) のような表示やブラウザなどのツールで検索時にサイドバーに検索位置
+が表示される機能を |:sign| を使用してエミュレートしています。
+
+基本的に移動を行うキー（|n| や |N| など）にマッピングして使用します。
 
 
 ==============================================================================
@@ -43,6 +47,10 @@ Example: >
 	" nmap N <Plug>(anzu-N-with-echo)
 	" nmap * <Plug>(anzu-star-with-echo)
 	" nmap # <Plug>(anzu-sharp-with-echo)
+
+	" sign も一緒に使用する場合
+	" nmap n <Plug>(anzu-n-with-echo)<Plug>(anzu-sign-matchline)
+	" nmap N <Plug>(anzu-N-with-echo)<Plug>(anzu-sign-matchline)
 <
 
 
@@ -66,9 +74,31 @@ Example: >
 		" カーソルが移動するたびに更新する
 		augroup anzu-update-search-status
 			autocmd!
-			autocmd CursorMoved * :AnzuUpdateSearchStatus|echo anzu#search_status()
+			autocmd CursorMoved *
+			\ :AnzuUpdateSearchStatus|echo anzu#search_status()
 		augroup END
 	<
+
+:AnzuSignMatchLine[!] [{pattern}]			*:AnzuSignMatchLine*
+	バッファ内の {pattern} に一致する行を全体の相対的な位置で |:sign| しま
+	す。
+	（ブラウザなどのツールで検索時にサイドバーに検索位置が表示されるアレ）
+
+	[!] が使用された場合は |anzu#sign_matchline| が呼ばれ、[!] がない場合
+	は |anzu#smart_sign_matchline| が使用されます。
+	強制的に |:sign| を行いたい場合は [!] を使用して下さい。
+
+	|anzu| 以外の |:sign| を使用していると上書きされる可能性があるので注意
+	して下さい。
+	{pattern} がない場合は |@/| の値を使用します。
+
+:AnzuClearSignMatchLine [{pattern}]		*:AnzuClearSignMatchLine*
+	|anzu| で設定された |:sign| を削除します。
+	|anzu| 以外の |:sign| も削除される可能性があるので注意して下さい。
+	また |:sign-unplace| を使用して |:sign| を削除した場
+	合、|:AnzuSignMatchLine| が正しく動作しない可能性があります。
+	その場合は、このコマンドを呼び出してから |:AnzuSignMatchLine| を呼び出
+	して下さい。
 
 ------------------------------------------------------------------------------
 関数						*anzu-functions*
@@ -79,13 +109,39 @@ anzu#search_status()				*anzu#search_status*
 anzu#clear_search_status()			*anzu#clear_search_status*
 	ステータス情報をクリアします。
 
+anzu#sign_matchline({pattern})			*anzu#sign_matchline*
+	{pattern} の位置を |:sign| します。
+
+anzu#smart_sign_matchline({pattern})		*anzu#smart_sign_matchline*
+	{pattern} の位置を |:sign| します。
+	基本的には |anzu#sign_matchline| と同じ動作になりますが、なる
+	べく無駄な |:sign| を行わないようになっています。
+	（e.g.カーソルがウィンドウの外に出ていない場合は |:sign| しない）
+
+	ただし、場合によっては正しく |:sign| が行われない事もあるので注意して
+	下さい。
+	（e.g.|:sign| の削除に|AnzuClearSignMatchLine| ではなく |:sign-unplace|
+	を使用した場合など）
+
+anzu#clear_sign_matchline()			*anzu#clear_sign_matchline*
+	|:sign| を削除します。
 
 ------------------------------------------------------------------------------
 キーマッピング					*anzu-key-mappings*
 
-<Plug>(anzu-search-status-update)		*<Plug>(anzu-search-status-update)*
+<Plug>(anzu-update-search-status)		*<Plug>(anzu-update-search-status)*
 	ステータス情報を更新します。
 	基本的には |n| や |N| と併用して使用します。
+	このマッピングは移動を行うマッピングよりも後で呼び出して下さい。
+
+	Example: >
+		" n や N の後で呼び出す。
+		nmap n n<Plug>(anzu-update-search-status)
+		nmap N N<Plug>(anzu-update-search-status)
+	<
+
+<Plug>(anzu-clear-search-status)		*<Plug>(anzu-clear-search-status)*
+	ステータス情報をクリアします。
 
 <Plug>(anzu-echo-search-status)			*<Plug>(anzu-echo-search-status)*
 	ステータス情報をコマンドラインへ出力します。
@@ -100,9 +156,10 @@ anzu#clear_search_status()			*anzu#clear_search_status*
 
 <Plug>(anzu-update-search-status-with-echo)	*<Plug>(anzu-update-search-status-with-echo)*
 	ステータス情報を更新後にコマンドラインへと出力します。
+	このマッピングは移動を行うマッピングよりも後で呼び出して下さい。
 
 	Example: >
-		" g* 時にステータス情報を出力する場合
+		" g* の後で呼び出す。
 		nmap g* g*<Plug>(anzu-update-search-status-with-echo)
 	<
 
@@ -133,6 +190,25 @@ anzu#clear_search_status()			*anzu#clear_search_status*
 
 <Plug>(anzu-sharp-with-echo)			*<Plug>(anzu-sharp-with-echo)*
 	|<Plug>(anzu-sharp)| 後にコマンドラインにステータス情報を出力します。
+
+<Plug>(anzu-sign-matchline)			*<Plug>(anzu-sign-matchline)*
+	|:AnzuSignMatchLine| を [!] 付きで呼び出します。
+	|:AnzuSignMatchLine| の引数には |@/| が使用されます。
+	このマッピングは移動を行うマッピングよりも後で呼び出して下さい。
+
+	Example: >
+		" n や N の後で呼び出す。
+		nmap n n<Plug>(anzu-sign-matchline)
+		nmap N N<Plug>(anzu-sign-matchline)
+	<
+
+<Plug>(anzu-clear-sign-matchline)		*<Plug>(anzu-clear-sign-matchline)*
+	|:AnzuClearSignMatchLine| を呼び出します。
+	|:AnzuSignMatchLine| を [!] ありで呼び出します。
+
+<Plug>(anzu-smart-sign-matchline)		*<Plug>(anzu-smart-sign-matchline)*
+	基本的には |<Plug>(anzu-sign-matchline)| と同じです。
+	|:AnzuSignMatchLine| を [!] なしで呼び出します。
 
 
 ==============================================================================
