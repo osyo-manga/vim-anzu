@@ -8,7 +8,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 
-let g:anzu_status_format = get(g:, "g:anzu_status_format", "%p(%i/%l)")
+let g:anzu_status_format = get(g:, "anzu_status_format", "%p(%i/%l)")
 
 
 command! -bar AnzuClearSearchStatus call anzu#clear_search_status()
