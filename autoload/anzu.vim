@@ -21,7 +21,7 @@ function! anzu#update(pattern, cursor_pos)
 	endif
 	let pos_all = s:searchpos_all(pattern)
 	if empty(pos_all)
-		let s:status_cache = "nothing"
+		let s:status_cache = "anzu.vim : nothing"
 		return
 	endif
 
@@ -46,6 +46,9 @@ function! s:searchpos_all(pattern)
 				break
 			endif
 			call add(result, pos)
+			if len(result) >= g:anzu_search_limit
+				break
+			endif
 		endwhile
 	finally
 		call setpos(".", old_pos)

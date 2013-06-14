@@ -9,6 +9,7 @@ set cpo&vim
 
 
 let g:anzu_status_format = get(g:, "anzu_status_format", "%p(%i/%l)")
+let g:anzu_search_limit  = get(g:, "anzu_search_limit", 1000)
 
 
 command! -bar AnzuClearSearchStatus call anzu#clear_search_status()

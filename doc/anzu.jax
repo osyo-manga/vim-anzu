@@ -226,9 +226,20 @@ g:anzu_status_format				*g:anzu_status_format*
 	%i		現在の位置
 	%l		一致した個数
 
-	Default: >
-		let g:anzu_status_format = "%p(%i/%l)"
-	<
+Default: >
+	let g:anzu_status_format = "%p(%i/%l)"
+<
+
+g:anzu_search_limit				*g:anzu_search_limit*
+	検索するワードの個数の最大値を設定します。
+	この変数に設定されている値よりも多くヒットした場合、その場で検索を終了
+	します。
+	ヒットするワードが多すぎて動作が遅くなってしまう場合はこの変数に低い値
+	を設定して下さい。
+
+Default: >
+	let g:anzu_search_limit = 1000
+<
 
 
 ==============================================================================
