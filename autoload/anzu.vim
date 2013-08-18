@@ -41,14 +41,14 @@ function! anzu#update(pattern, cursor_pos)
 	
 	if empty(pos_all)
 		let s:status_cache = g:anzu_no_match_word
-		return
+		return -1
 	endif
 
 
-	let index = s:search_less_pos(pos_all, [cursor[1], cursor[2]])
-" 	let index = index(pos_all, [cursor[1], cursor[2]])
+" 	let index = s:search_less_pos(pos_all, [cursor[1], cursor[2]])
+	let index = index(pos_all, [cursor[1], cursor[2]])
 	if index == -1
-		return
+		return -1
 	endif
 
 	let pattern = substitute(pattern, '\\', '\\\\', 'g')

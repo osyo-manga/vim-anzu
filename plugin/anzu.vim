@@ -73,7 +73,11 @@ augroup anzu
 	autocmd!
 	autocmd CursorMoved *
 \		if g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
-\|			AnzuUpdateSearchStatusOutput
+\|			if anzu#update(@/, getpos(".")) != -1
+\|				echo anzu#search_status()
+\|			else
+\|				echo g:anzu_no_match_word
+\|			endif
 \|		endif
 
 	if exists("##TextChanged")
