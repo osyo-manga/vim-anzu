@@ -106,6 +106,11 @@ Example: >
 :AnzuClearSearchCache				*:AnzuClearSearchCache*
 	カレントバッファの検索情報のキャッシュをクリアします。
 
+:AnzuUpdateSearchStatusOutput			*AnzuUpdateSearchStatusOutput*
+	|:AnzuUpdateSearchStatus| 後に |anzu#search_status()| を |:echo| で出
+	力します。
+
+
 ------------------------------------------------------------------------------
 関数						*anzu-functions*
 
@@ -253,6 +258,26 @@ g:anzu_search_limit				*g:anzu_search_limit*
 Default: >
 	let g:anzu_search_limit = 1000
 <
+
+
+g:anzu_no_match_word				*g:anzu_no_match_word*
+	検索時にマッチしなかった場合に |anzu#search_status()|
+	|<Plug>(anzu-echo-search-status)| で出力する文字列です。
+
+Default: >
+	let g:anzu_no_match_word = "anzu.vim : nothing
+<
+
+			*g:anzu_enable_CursorHold_AnzuUpdateSearchStatus*
+g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
+	1 が設定されていれば |CursorHold| 時に |:AnzuUpdateSearchStatusOutput|
+	を呼び出します。
+	カーソル移動するたびに検索結果を出力したい場合に使用して下さい。
+
+Default: >
+	let g:anzu_enable_CursorHold_AnzuUpdateSearchStatus = 0
+<
+
 
 
 ==============================================================================

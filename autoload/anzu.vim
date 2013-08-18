@@ -13,6 +13,23 @@ function! anzu#clear_search_status()
 endfunction
 
 
+" a <= b
+function! s:pos_less_equal(a, b)
+	return a:a[0] == a:b[0] ? a:a[1] <= a:b[1] : a:a[0] <= a:b[0]
+endfunction
+
+function! s:search_less_pos(pos_list, pos)
+	let index = 0
+	for pos in a:pos_list
+		if s:pos_less_equal(a:pos, pos)
+			return index
+		endif
+		let index = index + 1
+	endfor
+	return -1
+endfunction
+
+
 function! anzu#update(pattern, cursor_pos)
 	let pattern = a:pattern
 	let cursor = a:cursor_pos
@@ -23,12 +40,13 @@ function! anzu#update(pattern, cursor_pos)
 	let pos_all = s:searchpos(pattern)
 	
 	if empty(pos_all)
-		let s:status_cache = "anzu.vim : nothing"
+		let s:status_cache = g:anzu_no_match_word
 		return
 	endif
 
-	let cursor = getpos(".")
-	let index = index(pos_all, [cursor[1], cursor[2]])
+
+	let index = s:search_less_pos(pos_all, [cursor[1], cursor[2]])
+" 	let index = index(pos_all, [cursor[1], cursor[2]])
 	if index == -1
 		return
 	endif
@@ -42,18 +60,6 @@ function! anzu#clear_search_cache(...)
 	let bufnr = get(a:, 1, bufnr("%"))
 	call setbufvar(bufnr, "anzu_searchpos_cache", {})
 endfunction
-
-
-augroup anzu
-	autocmd!
-	if exists("##TextChanged")
-		autocmd TextChanged * call anzu#clear_search_cache()
-		autocmd TextChangedI * call anzu#clear_search_cache()
-	else
-		autocmd InsertCharPre * call anzu#clear_search_cache()
-		autocmd BufWritePost * call anzu#clear_search_cache()
-	endif
-augroup END
 
 
 
