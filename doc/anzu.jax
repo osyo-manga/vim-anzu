@@ -265,7 +265,7 @@ g:anzu_no_match_word				*g:anzu_no_match_word*
 	|<Plug>(anzu-echo-search-status)| で出力する文字列です。
 
 Default: >
-	let g:anzu_no_match_word = "anzu.vim : nothing
+	let g:anzu_no_match_word = "anzu.vim : nothing"
 <
 
 			*g:anzu_enable_CursorHold_AnzuUpdateSearchStatus*
