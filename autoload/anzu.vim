@@ -65,7 +65,12 @@ endfunction
 
 function! s:searchpos(pattern, ...)
 	let bufnr = get(a:, 1, bufnr("%"))
-	let cache = getbufvar(bufnr, "anzu_searchpos_cache", {})
+	let cache = getbufvar(bufnr, "anzu_searchpos_cache")
+	if type(cache) == type("")
+		unlet cache
+		let cache = {}
+	endif
+
 	if has_key(cache, a:pattern)
 		return deepcopy(cache[a:pattern])
 	endif
