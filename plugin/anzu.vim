@@ -10,7 +10,9 @@ set cpo&vim
 
 let g:anzu_status_format = get(g:, "anzu_status_format", "%p(%i/%l)")
 let g:anzu_search_limit  = get(g:, "anzu_search_limit", 1000)
-let g:anzu_no_match_word = get(g:, "anzu_no_match_word", "anzu.vim : nothing")
+let g:anzu_no_match_word = get(g:, "anzu_no_match_word", "")
+
+let g:anzu_airline_format = get(g:, "anzu_airline_format", "(%i/%l)")
 
 
 command! -bar AnzuClearSearchStatus call anzu#clear_search_status()
