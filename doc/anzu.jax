@@ -278,6 +278,9 @@ Default: >
 	let g:anzu_enable_CursorHold_AnzuUpdateSearchStatus = 0
 <
 
+g:airline#extensions#anzu#enabled	*g:airline#extensions#anzu#enabled*
+	|airline| にステータス情報を表示するかどうかの設定を行います。
+	0 が設定されていれば |airline| には表示されません。
 
 
 ==============================================================================
