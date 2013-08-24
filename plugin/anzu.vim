@@ -86,7 +86,9 @@ augroup anzu
 		autocmd TextChanged * call anzu#clear_search_cache()
 		autocmd TextChangedI * call anzu#clear_search_cache()
 	else
-		autocmd InsertCharPre * call anzu#clear_search_cache()
+		if exists("##InsertCharPre")
+			autocmd InsertCharPre * call anzu#clear_search_cache()
+		endif
 		autocmd BufWritePost * call anzu#clear_search_cache()
 	endif
 augroup END
