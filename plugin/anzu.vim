@@ -22,7 +22,16 @@ command! -bar AnzuUpdateSearchStatus call anzu#update(@/, getpos("."))
 command! -bar AnzuUpdateSearchStatusOutput call anzu#update(@/, getpos(".")) | echo anzu#search_status()
 
 
-nnoremap <silent> <Plug>(anzu-echo-search-status) :<C-u>echo anzu#search_status()<CR>
+function! s:echo_search_status()
+	let highlight = matchstr(g:anzu_status_format, '%#\zs.*\ze#')
+	if empty(highlight)
+		echo anzu#search_status()
+	else
+		execute printf("echohl %s | echo anzu#search_status() | echohl None", highlight)
+	endif
+endfunction
+
+nnoremap <silent> <Plug>(anzu-echo-search-status) :<C-u>call <SID>echo_search_status()<CR>
 
 nnoremap <silent> <Plug>(anzu-update-search-status) :<C-u>AnzuUpdateSearchStatus<CR>
 nmap <silent> <Plug>(anzu-update-search-status-with-echo)

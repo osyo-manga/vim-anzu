@@ -243,9 +243,13 @@ g:anzu_status_format				*g:anzu_status_format*
 	%p		検索パターン
 	%i		現在の位置
 	%l		一致した個数
+	%#		強調グループ(see: 'statusline')
 
 Default: >
 	let g:anzu_status_format = "%p(%i/%l)"
+
+	" highlight "WarningMsg"
+	let g:anzu_status_format = "%#WarningMsg#%p(%i/%l)"
 <
 
 g:anzu_search_limit				*g:anzu_search_limit*

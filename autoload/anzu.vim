@@ -52,7 +52,7 @@ function! anzu#update(pattern, cursor_pos)
 	endif
 
 	let pattern = substitute(pattern, '\\', '\\\\', 'g')
-	let s:status_cache = substitute(substitute(substitute(g:anzu_status_format, "%p", pattern, "g"), "%i", index+1, "g"), "%l", len(pos_all), "g")
+	let s:status_cache = substitute(substitute(substitute(substitute(g:anzu_status_format, '%#.*#', '', "g"), "%p", pattern, "g"), "%i", index+1, "g"), "%l", len(pos_all), "g")
 endfunction
 
 
