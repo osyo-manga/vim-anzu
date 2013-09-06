@@ -120,6 +120,11 @@ anzu#search_status()				*anzu#search_status()*
 anzu#clear_search_status()			*anzu#clear_search_status()*
 	ステータス情報をクリアします。
 
+anzu#echohl_search_status()			*anzu#echohl_search_status()*
+	ステータス情報を |:echohl| でハイライトして出力します。
+	この時に使用されるハイライトグループは |g:anzu_status_format| で設定し
+	たものが使用されます。
+
 anzu#sign_matchline({pattern})			*anzu#sign_matchline()*
 	{pattern} の位置を |:sign| します。
 

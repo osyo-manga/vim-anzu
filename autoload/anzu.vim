@@ -5,13 +5,24 @@ set cpo&vim
 let s:status_cache = ""
 
 function! anzu#search_status()
-	return s:status_cache
+	return substitute(s:status_cache, '<anzustatushighlight>.\{-}<\/anzustatushighlight>', "", "g")
 endfunction
 
 function! anzu#clear_search_status()
 	let s:status_cache = ""
 endfunction
 
+function! anzu#echohl_search_status()
+	let text = s:status_cache
+	try
+		for word in split(text . "\n<anzustatushighlight>None<\/anzustatushighlight>", '<anzustatushighlight>.\{-}<\/anzustatushighlight>\zs')
+			echon matchstr(word, '\zs.*\ze<anzustatushighlight>.*<\/anzustatushighlight>')
+			execute "echohl" matchstr(word, '.*<anzustatushighlight>\zs.*\ze<\/anzustatushighlight>')
+		endfor
+	finally
+		echohl None
+	endtry
+endfunction
 
 
 " a <= b
@@ -34,7 +45,7 @@ endfunction
 
 function! s:print_status(format, pattern, index, len, wrap)
 	let result = a:format
-	let result = substitute(result, '%#.*#', '', "g")
+	let result = substitute(result, '%#\(.\{-}\)#', '<anzustatushighlight>\1<\/anzustatushighlight>', "g")
 	let result = substitute(result, '%p', a:pattern, "g")
 	let result = substitute(result, '%i', a:index, "g")
 	let result = substitute(result, '%l', a:len, "g")

@@ -53,19 +53,10 @@ command! -bar AnzuClearSearchStatus call anzu#clear_search_status()
 command! -bar AnzuClearSearchCache call anzu#clear_search_cache()
 
 command! -bar AnzuUpdateSearchStatus call anzu#update(@/, getpos("."), s:wrapscan_mes())
-command! -bar AnzuUpdateSearchStatusOutput call anzu#update(@/, getpos("."), s:wrapscan_mes()) | echo anzu#search_status()
+command! -bar AnzuUpdateSearchStatusOutput call anzu#update(@/, getpos("."), s:wrapscan_mes()) | call anzu#echohl_search_status()
 
 
-function! s:echo_search_status()
-	let highlight = matchstr(g:anzu_status_format, '%#\zs.*\ze#')
-	if empty(highlight)
-		echo anzu#search_status()
-	else
-		execute printf("echohl %s | echo anzu#search_status() | echohl None", highlight)
-	endif
-endfunction
-
-nnoremap <silent> <Plug>(anzu-echo-search-status) :<C-u>call <SID>echo_search_status()<CR>
+nnoremap <silent> <Plug>(anzu-echo-search-status) :<C-u>call anzu#echohl_search_status()<CR>
 
 
 nnoremap <silent> <Plug>(anzu-echo-search-repeat) :<C-t>call <SID>echo_search_repeat()<CR>
