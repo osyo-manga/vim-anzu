@@ -15,7 +15,7 @@ endfunction
 function! anzu#echohl_search_status()
 	let text = s:status_cache
 	try
-		for word in split(text . "\n<anzustatushighlight>None<\/anzustatushighlight>", '<anzustatushighlight>.\{-}<\/anzustatushighlight>\zs')
+		for word in split(text . "<anzustatushighlight>None<\/anzustatushighlight>", '<anzustatushighlight>.\{-}<\/anzustatushighlight>\zs')
 			echon matchstr(word, '\zs.*\ze<anzustatushighlight>.*<\/anzustatushighlight>')
 			execute "echohl" matchstr(word, '.*<anzustatushighlight>\zs.*\ze<\/anzustatushighlight>')
 		endfor
