@@ -8,18 +8,52 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 
+function! s:push_pos(is_back)
+	let s:start_pos = getpos(".")
+	let s:is_back = a:is_back
+endfunction
+
+
+" a < b
+function! s:pos_less(a, b)
+	return a:a[0] == a:b[0] ? a:a[1] < a:b[1] : a:a[0] < a:b[0]
+endfunction
+
+
+function! s:wrapscan_mes()
+	if !exists("s:start_pos") || !exists("s:is_back")
+		return
+	endif
+	let prev_pos = s:start_pos
+	let pos = getpos(".")
+	let result = ""
+	if !empty(prev_pos) && s:pos_less(pos, prev_pos) && !s:is_back
+		let result = g:anzu_bottomtop_word
+	elseif !empty(prev_pos) && s:pos_less(prev_pos, pos) && s:is_back
+		let result = g:anzu_topbottom_word
+	endif
+	unlet s:start_pos
+	unlet s:is_back
+
+	return result
+endfunction
+
+
 let g:anzu_status_format = get(g:, "anzu_status_format", "%p(%i/%l)")
 let g:anzu_search_limit  = get(g:, "anzu_search_limit", 1000)
 let g:anzu_no_match_word = get(g:, "anzu_no_match_word", "")
 
 let g:anzu_airline_format = get(g:, "anzu_airline_format", "(%i/%l)")
 
+let g:anzu_bottomtop_word = get(g:, "anzu_bottomtop_word", "search hit BOTTOM, continuing at TOP")
+let g:anzu_topbottom_word = get(g:, "anzu_topbottom_word", "search hit TOP, continuing at BOTTOM")
+
 
 command! -bar AnzuClearSearchStatus call anzu#clear_search_status()
 command! -bar AnzuClearSearchCache call anzu#clear_search_cache()
 
-command! -bar AnzuUpdateSearchStatus call anzu#update(@/, getpos("."))
-command! -bar AnzuUpdateSearchStatusOutput call anzu#update(@/, getpos(".")) | echo anzu#search_status()
+command! -bar AnzuUpdateSearchStatus call anzu#update(@/, getpos("."), s:wrapscan_mes())
+command! -bar AnzuUpdateSearchStatusOutput call anzu#update(@/, getpos("."), s:wrapscan_mes()) | echo anzu#search_status()
 
 
 function! s:echo_search_status()
@@ -33,6 +67,10 @@ endfunction
 
 nnoremap <silent> <Plug>(anzu-echo-search-status) :<C-u>call <SID>echo_search_status()<CR>
 
+
+nnoremap <silent> <Plug>(anzu-echo-search-repeat) :<C-t>call <SID>echo_search_repeat()<CR>
+
+
 nnoremap <silent> <Plug>(anzu-update-search-status) :<C-u>AnzuUpdateSearchStatus<CR>
 nmap <silent> <Plug>(anzu-update-search-status-with-echo)
 \	<Plug>(anzu-update-search-status)<Plug>(anzu-echo-search-status)
@@ -40,19 +78,28 @@ nmap <silent> <Plug>(anzu-update-search-status-with-echo)
 nnoremap <silent> <Plug>(anzu-clear-search-status) :<C-u>AnzuClearSearchStatus<CR>
 nnoremap <silent> <Plug>(anzu-clear-search-cache) :<C-u>AnzuClearSearchCache<CR>
 
-nnoremap <silent> <Plug>(anzu-star) *:<C-u>AnzuUpdateSearchStatus<CR>
+
+nnoremap <silent> <Plug>(anzu-star)
+\	:<C-u>call <SID>push_pos(0)<CR>*:<C-u>AnzuUpdateSearchStatus<CR>
+
 nmap <silent> <Plug>(anzu-star-with-echo)
 \	<Plug>(anzu-star)<Plug>(anzu-echo-search-status)
 
-nnoremap <silent> <Plug>(anzu-sharp) #:<C-u>AnzuUpdateSearchStatus<CR>
+nnoremap <silent> <Plug>(anzu-sharp)
+\	:<C-u>call <SID>push_pos(1)<CR>#:<C-u>AnzuUpdateSearchStatus<CR>
+
 nmap <silent> <Plug>(anzu-sharp-with-echo)
 \	<Plug>(anzu-sharp)<Plug>(anzu-echo-search-status)
 
-nnoremap <silent> <Plug>(anzu-n) n:<C-u>AnzuUpdateSearchStatus<CR>
+nnoremap <silent> <Plug>(anzu-n)
+\	:<C-u>call <SID>push_pos(0)<CR>n:<C-u>AnzuUpdateSearchStatus<CR>
+
 nmap <silent> <Plug>(anzu-n-with-echo)
 \	<Plug>(anzu-n)<Plug>(anzu-echo-search-status)
 
-nnoremap <silent> <Plug>(anzu-N) N:<C-u>AnzuUpdateSearchStatus<CR>
+nnoremap <silent> <Plug>(anzu-N)
+\	:<C-u>call <SID>push_pos(1)<CR>N:<C-u>AnzuUpdateSearchStatus<CR>
+
 nmap <silent> <Plug>(anzu-N-with-echo)
 \	<Plug>(anzu-N)<Plug>(anzu-echo-search-status)
 
@@ -84,7 +131,7 @@ augroup anzu
 	autocmd!
 	autocmd CursorMoved *
 \		if g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
-\|			if anzu#update(@/, getpos(".")) != -1
+\|			if anzu#update(@/, getpos("."), s:wrapscan_mes()) != -1
 \|				echo anzu#search_status()
 \|			else
 \|				echo g:anzu_no_match_word

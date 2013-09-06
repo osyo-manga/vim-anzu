@@ -13,10 +13,12 @@ function! anzu#clear_search_status()
 endfunction
 
 
+
 " a <= b
 function! s:pos_less_equal(a, b)
 	return a:a[0] == a:b[0] ? a:a[1] <= a:b[1] : a:a[0] <= a:b[0]
 endfunction
+
 
 function! s:search_less_pos(pos_list, pos)
 	let index = 0
@@ -30,7 +32,17 @@ function! s:search_less_pos(pos_list, pos)
 endfunction
 
 
-function! anzu#update(pattern, cursor_pos)
+function! s:print_status(format, pattern, index, len, wrap)
+	let result = a:format
+	let result = substitute(result, '%#.*#', '', "g")
+	let result = substitute(result, '%p', a:pattern, "g")
+	let result = substitute(result, '%i', a:index, "g")
+	let result = substitute(result, '%l', a:len, "g")
+	let result = substitute(result, '%w', a:wrap, "g")
+	return result
+endfunction
+
+function! anzu#update(pattern, cursor_pos, ...)
 	let pattern = a:pattern
 	let cursor = a:cursor_pos
 	if empty(pattern)
@@ -44,15 +56,15 @@ function! anzu#update(pattern, cursor_pos)
 		return -1
 	endif
 
-
-" 	let index = s:search_less_pos(pos_all, [cursor[1], cursor[2]])
 	let index = index(pos_all, [cursor[1], cursor[2]])
 	if index == -1
 		return -1
 	endif
 
+	let wrap_mes = get(a:, 1, "")
+
 	let pattern = substitute(pattern, '\\', '\\\\', 'g')
-	let s:status_cache = substitute(substitute(substitute(substitute(g:anzu_status_format, '%#.*#', '', "g"), "%p", pattern, "g"), "%i", index+1, "g"), "%l", len(pos_all), "g")
+	let s:status_cache = s:print_status(g:anzu_status_format, pattern, index+1, len(pos_all), wrap_mes)
 endfunction
 
 
@@ -86,7 +98,7 @@ function! s:searchpos_all(pattern)
 	let old_pos =getpos(".")
 	let result = []
 	try
-		call setpos(".", [0, 0, 0, 0])
+		call setpos(".", [0, line("$"), strlen(getline("$")), 0])
 		while 1
 			let pos = searchpos(a:pattern, "")
 			if pos == [0, 0] || index(result, pos) != -1
@@ -102,8 +114,6 @@ function! s:searchpos_all(pattern)
 	endtry
 	return result
 endfunction
-
-
 
 
 
