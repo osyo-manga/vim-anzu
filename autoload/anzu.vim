@@ -46,10 +46,10 @@ endfunction
 function! s:print_status(format, pattern, index, len, wrap)
 	let result = a:format
 	let result = substitute(result, '%#\(.\{-}\)#', '<anzustatushighlight>\1<\/anzustatushighlight>', "g")
-	let result = substitute(result, '%p', a:pattern, "g")
 	let result = substitute(result, '%i', a:index, "g")
 	let result = substitute(result, '%l', a:len, "g")
 	let result = substitute(result, '%w', a:wrap, "g")
+	let result = substitute(result, '%p', a:pattern, "g")
 	return result
 endfunction
 
