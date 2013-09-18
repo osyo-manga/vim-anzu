@@ -13,6 +13,7 @@ let g:anzu_search_limit  = get(g:, "anzu_search_limit", 1000)
 
 
 command! -bar AnzuClearSearchStatus call anzu#clear_search_status()
+command! -bar AnzuClearSearchCache call anzu#clear_search_cache()
 
 command! -bar AnzuUpdateSearchStatus call anzu#update(@/, getpos("."))
 
@@ -24,6 +25,7 @@ nmap <silent> <Plug>(anzu-update-search-status-with-echo)
 \	<Plug>(anzu-update-search-status)<Plug>(anzu-echo-search-status)
 
 nnoremap <silent> <Plug>(anzu-clear-search-status) :<C-u>AnzuClearSearchStatus<CR>
+nnoremap <silent> <Plug>(anzu-clear-search-cache) :<C-u>AnzuClearSearchCache<CR>
 
 nnoremap <silent> <Plug>(anzu-star) *:<C-u>AnzuUpdateSearchStatus<CR>
 nmap <silent> <Plug>(anzu-star-with-echo)

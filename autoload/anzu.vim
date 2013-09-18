@@ -19,7 +19,9 @@ function! anzu#update(pattern, cursor_pos)
 	if empty(pattern)
 		return
 	endif
-	let pos_all = s:searchpos_all(pattern)
+
+	let pos_all = s:searchpos(pattern)
+	
 	if empty(pos_all)
 		let s:status_cache = "anzu.vim : nothing"
 		return
@@ -34,6 +36,39 @@ function! anzu#update(pattern, cursor_pos)
 	let pattern = substitute(pattern, '\\', '\\\\', 'g')
 	let s:status_cache = substitute(substitute(substitute(g:anzu_status_format, "%p", pattern, "g"), "%i", index+1, "g"), "%l", len(pos_all), "g")
 endfunction
+
+
+function! anzu#clear_search_cache(...)
+	let bufnr = get(a:, 1, bufnr("%"))
+	call setbufvar(bufnr, "anzu_searchpos_cache", {})
+endfunction
+
+
+augroup anzu
+	autocmd!
+	if exists("##TextChanged")
+		autocmd TextChanged * call anzu#clear_search_cache()
+		autocmd TextChangedI * call anzu#clear_search_cache()
+	else
+		autocmd InsertCharPre * call anzu#clear_search_cache()
+		autocmd BufWritePost * call anzu#clear_search_cache()
+	endif
+augroup END
+
+
+
+function! s:searchpos(pattern, ...)
+	let bufnr = get(a:, 1, bufnr("%"))
+	let cache = getbufvar(bufnr, "anzu_searchpos_cache", {})
+	if has_key(cache, a:pattern)
+		return deepcopy(cache[a:pattern])
+	endif
+	let searchpos = s:searchpos_all(a:pattern)
+	let cache[a:pattern] = searchpos
+	call setbufvar(bufnr, "anzu_searchpos_cache", cache)
+	return deepcopy(searchpos)
+endfunction
+
 
 
 function! s:searchpos_all(pattern)
@@ -56,6 +91,9 @@ function! s:searchpos_all(pattern)
 	endtry
 	return result
 endfunction
+
+
+
 
 
 function! anzu#clear_sign_matchline()
@@ -116,7 +154,7 @@ function! s:sign_lines(pattern)
 	let bottom = line("w$")
 	let height = bottom - top
 	let rate = str2float(height) / line("$")
-	let lines = map(s:searchpos_all(a:pattern), "float2nr(v:val[0] * rate) + top")
+	let lines = map(s:searchpos(a:pattern), "float2nr(v:val[0] * rate) + top")
 	return lines
 endfunction
 
