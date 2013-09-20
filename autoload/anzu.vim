@@ -105,7 +105,13 @@ function! anzu#jump_key(key, count)
 		AnzuUpdateSearchStatus
 	else
 		if !empty(a:key)
-			execute "normal" a:key
+			try
+				execute "normal" a:key
+			catch
+				echohl ErrorMsg | echo matchstr(v:exception, 'Vim(normal):\zs.*\ze') | echohl None
+				return -1
+			endtry
+" 			execute "normal" a:key
 		endif
 	endif
 endfunction
@@ -114,7 +120,7 @@ endfunction
 function! anzu#mapexpr_jump(...)
 	let l:count  = get(a:, 1, "")
 	let key = get(a:, 2, "")
-	return ":\<C-u>call anzu#jump_key(\"" . key . "\", " . count . ")\<CR>:set hlsearch\<CR>"
+	return ":\<C-u>if anzu#jump_key(\"" . key . "\", " . count . ") != -1 \<Bar> set hlsearch \<Bar> endif\<CR>"
 endfunction
 
 
