@@ -40,6 +40,11 @@ Example: >
 	" g* 時にステータス情報を出力する場合
 	nmap g* g*<Plug>(anzu-update-search-status-with-echo)
 
+	" 最後に検索したワードの [count] の位置へ移動する
+	" 10<Leader>j であれば先頭から10番目のワードの位置へ移動する
+	nmap <Leader>j <Plug>(anzu-jump)
+	" ステータス情報をコマンドラインに出力する場合はこちら
+	" nmap <Leader>j <Plug>(anzu-jump)<Plug>(anzu-echo-search-status)
 
 	" ステータス情報を statusline へと表示する
 	set statusline=%{anzu#search_status()}
@@ -54,6 +59,8 @@ Example: >
 	" sign も一緒に使用する場合
 	" nmap n <Plug>(anzu-n-with-echo)<Plug>(anzu-sign-matchline)
 	" nmap N <Plug>(anzu-N-with-echo)<Plug>(anzu-sign-matchline)
+
+
 <
 
 
@@ -232,6 +239,43 @@ Example: >
 <Plug>(anzu-smart-sign-matchline)		*<Plug>(anzu-smart-sign-matchline)*
 	基本的には |<Plug>(anzu-sign-matchline)| と同じです。
 	|:AnzuSignMatchLine| を [!] なしで呼び出します。
+
+<Plug>(anzu-jump)				*<Plug>(anzu-jump)*
+	最後に検索したワードの [count] の位置へ移動します。
+	[count] がない、もしくは範囲外であれば移動はしません。
+Example: >
+	" 最後に検索したワードの [count] の位置へ移動する
+	" 10<Leader>j であれば先頭から10番目のワードの位置へ移動する
+	nmap <Leader>j <Plug>(anzu-jump)
+	" ステータス情報をコマンドラインに出力する場合はこちら
+	" nmap <Leader>j <Plug>(anzu-jump)<Plug>(anzu-echo-search-status)
+<
+
+<Plug>(anzu-jump-n)				*<Plug>(anzu-jump-n)*
+	最後に検索したワードの [count] の位置へ移動します。
+	10<Plug>(anzu-jump-n) であればバッファの先頭から10番目のワードの位置へ
+	移動します。
+	[count] がなければ |<Plug>(anzu-n)| を使用します。
+	[count] が範囲外であれば移動はしません。
+Example: >
+	nmap n <Plug>(anzu-jump-n)
+
+	" 位置をコマンドラインに出力したい場合
+	nmap n <Plug>(anzu-jump-n)<Plug>(anzu-echo-search-status)
+<
+<Plug>(anzu-jump-N)				*<Plug>(anzu-jump-N)*
+	最後に検索したワードの [count] の位置へ移動します。
+	[count] がない場合に |<Plug>(anzu-N)| が使用される以外は
+	|<Plug>(anzu-jump-n)| と同じです。
+
+<Plug>(anzu-jump-star)				*<Plug>(anzu-jump-star)*
+	カーソルに最も近い単語の [count] の位置へ移動します。
+	[count] がない場合に |<Plug>(anzu-star)| が使用される以外は
+	|<Plug>(anzu-jump-n)| と同じです。
+
+<Plug>(anzu-jump-sharp)				*<Plug>(anzu-jump-sharp)*
+	[count] がない場合に |<Plug>(anzu-sharp)| が使用される以外は
+	|<Plug>(anzu-jump-sharp)| と同じです。
 
 
 ==============================================================================

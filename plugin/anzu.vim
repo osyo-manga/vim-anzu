@@ -59,9 +59,6 @@ command! -bar AnzuUpdateSearchStatusOutput call anzu#update(@/, getpos("."), s:w
 nnoremap <silent> <Plug>(anzu-echo-search-status) :<C-u>call anzu#echohl_search_status()<CR>
 
 
-nnoremap <silent> <Plug>(anzu-echo-search-repeat) :<C-t>call <SID>echo_search_repeat()<CR>
-
-
 nnoremap <silent> <Plug>(anzu-update-search-status) :<C-u>AnzuUpdateSearchStatus<CR>
 nmap <silent> <Plug>(anzu-update-search-status-with-echo)
 \	<Plug>(anzu-update-search-status)<Plug>(anzu-echo-search-status)
@@ -94,6 +91,22 @@ nnoremap <silent><expr> <Plug>(anzu-N)
 
 nmap <silent> <Plug>(anzu-N-with-echo)
 \	<Plug>(anzu-N)<Plug>(anzu-echo-search-status)
+
+
+nmap <silent><expr> <Plug>(anzu-jump)
+\	anzu#mapexpr_jump(v:count, '')
+
+nmap <silent><expr> <Plug>(anzu-jump-n)
+\	anzu#mapexpr_jump(v:count, '\<Plug>(anzu-n)')
+
+nmap <silent><expr> <Plug>(anzu-jump-N)
+\	anzu#mapexpr_jump(v:count, '\<Plug>(anzu-N)')
+
+nmap <silent><expr> <Plug>(anzu-jump-star)
+\	":<C-u>normal! *N\<CR>" . anzu#mapexpr_jump(v:count, '\<Plug>(anzu-star)')
+
+nmap <silent><expr> <Plug>(anzu-jump-sharp)
+\	":<C-u>normal! *N\<CR>" . anzu#mapexpr_jump(v:count, '\<Plug>(anzu-sharp)')
 
 
 command! -bar -nargs=* -bang

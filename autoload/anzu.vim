@@ -85,6 +85,38 @@ function! anzu#clear_search_cache(...)
 endfunction
 
 
+function! anzu#getpos(pattern, count)
+	return get(s:searchpos(a:pattern), a:count, [])
+endfunction
+
+
+function! anzu#jump(pattern, count)
+	let pos = anzu#getpos(a:pattern, a:count)
+	if empty(pos)
+		return
+	endif
+	call setpos(".", [0] + pos + [0])
+endfunction
+
+
+function! anzu#jump_key(key, count)
+	if a:count
+		call anzu#jump(@/, a:count - 1)
+		AnzuUpdateSearchStatus
+	else
+		if !empty(a:key)
+			execute "normal" a:key
+		endif
+	endif
+endfunction
+
+
+function! anzu#mapexpr_jump(...)
+	let l:count  = get(a:, 1, "")
+	let key = get(a:, 2, "")
+	return ":\<C-u>call anzu#jump_key(\"" . key . "\", " . count . ")\<CR>:set hlsearch\<CR>"
+endfunction
+
 
 function! s:searchpos(pattern, ...)
 	let bufnr = get(a:, 1, bufnr("%"))
