@@ -93,19 +93,19 @@ nmap <silent> <Plug>(anzu-N-with-echo)
 \	<Plug>(anzu-N)<Plug>(anzu-echo-search-status)
 
 
-nmap <silent><expr> <Plug>(anzu-jump)
+nnoremap <silent><expr> <Plug>(anzu-jump)
 \	anzu#mapexpr_jump(v:count, '')
 
-nmap <silent><expr> <Plug>(anzu-jump-n)
+nnoremap <silent><expr> <Plug>(anzu-jump-n)
 \	anzu#mapexpr_jump(v:count, '\<Plug>(anzu-n)')
 
-nmap <silent><expr> <Plug>(anzu-jump-N)
+nnoremap <silent><expr> <Plug>(anzu-jump-N)
 \	anzu#mapexpr_jump(v:count, '\<Plug>(anzu-N)')
 
-nmap <silent><expr> <Plug>(anzu-jump-star)
+nnoremap <silent><expr> <Plug>(anzu-jump-star)
 \	":<C-u>normal! *N\<CR>" . anzu#mapexpr_jump(v:count, '\<Plug>(anzu-star)')
 
-nmap <silent><expr> <Plug>(anzu-jump-sharp)
+nnoremap <silent><expr> <Plug>(anzu-jump-sharp)
 \	":<C-u>normal! *N\<CR>" . anzu#mapexpr_jump(v:count, '\<Plug>(anzu-sharp)')
 
 
