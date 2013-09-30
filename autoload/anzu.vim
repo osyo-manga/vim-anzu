@@ -63,7 +63,7 @@ function! anzu#update(pattern, cursor_pos, ...)
 	let pos_all = s:searchpos(pattern)
 	
 	if empty(pos_all)
-		let s:status_cache = g:anzu_no_match_word
+		let s:status_cache = s:print_status(g:anzu_no_match_word, pattern, "", "", "")
 		return -1
 	endif
 
