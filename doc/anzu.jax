@@ -318,6 +318,7 @@ Default: >
 g:anzu_no_match_word				*g:anzu_no_match_word*
 	検索時にマッチしなかった場合に |anzu#search_status()|
 	|<Plug>(anzu-echo-search-status)| で出力する文字列です。
+	|g:anzu_status_format| と同様のシンボルを設定する事ができます。
 
 Default: >
 	let g:anzu_no_match_word = ""
