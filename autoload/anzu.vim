@@ -149,7 +149,7 @@ function! s:searchpos_all(pattern)
 	try
 		call setpos(".", [0, line("$"), strlen(getline("$")), 0])
 		while 1
-			let pos = searchpos(a:pattern, "w")
+			silent! let pos = searchpos(a:pattern, "w")
 			if pos == [0, 0] || index(result, pos) != -1
 				break
 			endif
