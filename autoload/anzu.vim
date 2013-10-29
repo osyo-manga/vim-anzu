@@ -15,8 +15,18 @@ endfunction
 function! anzu#echohl_search_status()
 	let text = s:status_cache
 	try
+		let len = 0
+		let max_len = &columns * (&cmdheight -1) + &columns / 2
 		for word in split(text . "<anzustatushighlight>None<\/anzustatushighlight>", '<anzustatushighlight>.\{-}<\/anzustatushighlight>\zs')
-			echon matchstr(word, '\zs.*\ze<anzustatushighlight>.*<\/anzustatushighlight>')
+			let output = matchstr(word, '\zs.*\ze<anzustatushighlight>.*<\/anzustatushighlight>')
+			if max_len > len + len(output)
+				echon output
+				let len += len(output)
+			else
+				echon output[ : max_len - len -1 ]
+				return
+			endif
+			echon output
 			execute "echohl" matchstr(word, '.*<anzustatushighlight>\zs.*\ze<\/anzustatushighlight>')
 		endfor
 	finally
