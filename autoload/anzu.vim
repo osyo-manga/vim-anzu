@@ -26,7 +26,6 @@ function! anzu#echohl_search_status()
 				echon output[ : max_len - len -1 ]
 				return
 			endif
-			echon output
 			execute "echohl" matchstr(word, '.*<anzustatushighlight>\zs.*\ze<\/anzustatushighlight>')
 		endfor
 	finally
