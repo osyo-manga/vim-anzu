@@ -173,6 +173,9 @@ function! s:searchpos_all(pattern)
 	return result
 endfunction
 
+function! anzu#searchpos(...)
+	return call("s:searchpos", a:000)
+endfunction
 
 
 function! anzu#clear_sign_matchline()

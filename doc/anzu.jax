@@ -338,7 +338,7 @@ g:airline#extensions#anzu#enabled	*g:airline#extensions#anzu#enabled*
 	|airline| にステータス情報を表示するかどうかの設定を行います。
 	0 が設定されていれば |airline| には表示されません。
 
-g:anzu_bottomtop_word			*g:anzu_bottomtop_word*
+g:anzu_bottomtop_word				*g:anzu_bottomtop_word*
 	|<Plug>(anzu-n-with-echo)| 等で末尾から先頭に移動した際に表示する文字
 	列です。
 	|g:anzu_status_format| の %w に置き換えられます。
@@ -346,7 +346,7 @@ Default: >
 	let g:anzu_bottomtop_word = "search hit BOTTOM, continuing at TOP"
 <
 
-g:anzu_topbottom_word			*g:anzu_topbottom_word*
+g:anzu_topbottom_word				*g:anzu_topbottom_word*
 	|<Plug>(anzu-N-with-echo)| 等で先頭から末尾に移動した際に表示する文字
 	列です。
 	|g:anzu_status_format| の %w に置き換えられます。
@@ -354,6 +354,13 @@ Default: >
 	let g:anzu_topbottom_word = "search hit TOP, continuing at BOTTOM"
 <
 
+==============================================================================
+unite-anzu					*unite-anzu*
+
+>
+	" {pattern} にマッチした行を unite.vim で出力
+	:Unite anzu:{pattern}
+<
 
 
 ==============================================================================
