@@ -61,7 +61,31 @@ Example: >
 	" nmap N <Plug>(anzu-N-with-echo)<Plug>(anzu-sign-matchline)
 
 
+==============================================================================
+anzu-mode					*anzu-mode*
+
+|anzu-mode| とは検索したワードの横に件数を表示するモードです。
+例えば /anzu と検索した場合、
+>
+	anzu(1/2)_homu
+	anzu(2/2)_mami
 <
+というようにバッファ上の検索したワードの横に件数が表示されます。
+このモードを開始する場合、
+
+次の関数、もしくはマッピングを呼び出す必要がありま
+す。
+ >
+	" anzu-mode を開始する
+	call anzu#mode#start("anzu", )
+
+	" n の後に anzu-mode を開始する
+	nmap n <Plug>(anzu-mode-n)
+	" N の後に anzu-mode を開始する
+	nmap N <Plug>(anzu-mode-N)
+<
+|anzu-mode| では |n| か |N| キーのみ受け付けます。
+それ以外のキーが押された場合、|anzu-mode| は終了します。
 
 
 ==============================================================================
@@ -152,6 +176,29 @@ anzu#clear_sign_matchline()			*anzu#clear_sign_matchline()*
 anzu#clear_search_cache([{bufnr}])		*anzu#clear_search_cache()*
 	バッファ番号{bufnr} の検索データのキャッシュをクリアします。
 	これは |TextChanged| |TextChangedI| で呼ばれます。
+
+						*anzu#mode#start()*
+anzu#mode#start({pattern}, {key}, {prefix}, {suffix})
+	{pattern} で検索を行う |anzu-mode| を開始します。
+	この時に最初に {key} のキーが呼ばれます。
+	{prefix} と {suffix} にはそれぞれ |anzu-mode| で |n| や |N| が押された
+	場合に prefix と suffix として追加されます。
+Example: >
+	" anzu で検索し、最初に n で移動し anzu-mode に入る
+	" anzu-mode で n や N が押された場合、
+	" nzzzv や Nzzzv として処理される
+	call anzu#mode#start("anzu", "n", "", "zzzv")
+<
+
+anzu#mode#mapexpr({key}, {prefix}, {suffix})	*anzu#mode#mapexpr()*
+	|:map-<expr>| で使用する以外は |anzu#mode#start()| と同じ挙動です。
+	{pattern} には |@/| が使用されます。
+Example: >
+	" anzu-mode で n を押した場合に nzzzv として処理する
+	nnoremap <expr> n anzu#mode#mapexpr("n", "", "zzzv")
+	" anzu-mode で N を押した場合に Nzzzv として処理する
+	nnoremap <expr> N anzu#mode#mapexpr("N", "", "zzzv")
+
 
 ------------------------------------------------------------------------------
 キーマッピング					*anzu-key-mappings*
@@ -276,6 +323,12 @@ Example: >
 <Plug>(anzu-jump-sharp)				*<Plug>(anzu-jump-sharp)*
 	[count] がない場合に |<Plug>(anzu-sharp)| が使用される以外は
 	|<Plug>(anzu-jump-sharp)| と同じです。
+
+<Plug>(anzu-mode-n)				*<Plug>(anzu-mode-n)*
+	|anzu-mode| を開始し、直後 |n| で移動します。
+
+<Plug>(anzu-mode-N)				*<Plug>(anzu-mode-N)*
+	|anzu-mode| を開始し、直後 |N| で移動します。
 
 
 ==============================================================================
