@@ -24,7 +24,6 @@ function! anzu#mode#start(pattern, key, prefix, suffix)
 		execute "normal! " . a:prefix . a:key . a:suffix
 		call s:hl_cursor("Cursor", getpos(".")[1:])
 	catch
-		echom v:exception
 		call s:finish()
 
 		echohl ErrorMsg | echo matchstr(v:exception, '^Vim(normal):\zs.*\ze$') | echohl None
@@ -40,7 +39,6 @@ function! anzu#mode#start(pattern, key, prefix, suffix)
 			call feedkeys(char)
 		endif
 	catch /^Vim\%((\a\+)\)\=:E132/
-		echom v:exception
 		return feedkeys(":call anzu#mode#start(".string(a:pattern).", ".string(char).")\<CR>", "n")
 	endtry
 endfunction
@@ -91,7 +89,7 @@ function! s:init(pattern)
 	let s:count = 0
 	let string = '\=printf("' . format . '", submatch(0), anzu#mode#counter(), ' . len . ')'
 	let pos = getpos(".")
-	let s:undo_flag = s:silent_substitute('%', '\(' . a:pattern . '\w*\)', string, 'g')
+	let s:undo_flag = s:silent_substitute('%', '\(' . a:pattern . '\)', string, 'g')
 	call setpos(".", pos)
 
 	let &modified = 0
@@ -101,7 +99,7 @@ function! s:init(pattern)
 	unlet! s:hl_cursor_id
 
 	let s:matchlist = []
-	call add(s:matchlist, matchadd("WarningMsg",  (&ignorecase ? '\c' : "") . a:pattern . '\w*\zs(\d\+/\d\+)', 3))
+	call add(s:matchlist, matchadd("WarningMsg",  (&ignorecase ? '\c' : "") . a:pattern . '\zs(\d\+/\d\+)', 3))
 endfunction
 
 
