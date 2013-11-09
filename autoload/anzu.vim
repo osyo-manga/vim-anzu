@@ -147,7 +147,7 @@ function! s:searchpos(pattern, ...)
 	let searchpos = s:searchpos_all(a:pattern)
 	let cache[a:pattern] = searchpos
 	call setbufvar(bufnr, "anzu_searchpos_cache", cache)
-	return deepcopy(searchpos)
+	return searchpos
 endfunction
 
 
@@ -236,7 +236,7 @@ function! s:sign_lines(pattern)
 	let bottom = line("w$")
 	let height = bottom - top
 	let rate = str2float(height) / line("$")
-	let lines = map(s:searchpos(a:pattern), "float2nr(v:val[0] * rate) + top")
+	let lines = map(deepcopy(s:searchpos(a:pattern)), "float2nr(v:val[0] * rate) + top")
 	return lines
 endfunction
 
