@@ -113,27 +113,27 @@ endfunction
 
 
 function! s:finish()
-	let &modifiable = 1
-
 	if get(s:, "undo_flag", 0)
 		call s:silent_undo()
 		let &modified = 1
 	endif
 
 	for [option, value] in items(s:options)
-		execute printf("let %s = '%s'", option, value)
+		call setbufvar(bufnr("%"), option, value)
 	endfor
 	let s:options = {}
 
 	let s:undo_flag = 0
 	let s:anzu_mode = 0
-	if exists("s:hl_cursor_id")
+	if exists("s:hl_cursor_id") && s:hl_cursor_id != -1
 		call matchdelete(s:hl_cursor_id)
 		unlet s:hl_cursor_id
 	endif
 
 	for id in s:matchlist
-		call matchdelete(id)
+		if id != -1
+			call matchdelete(id)
+		endif
 	endfor
 	let s:matchlist = []
 endfunction
