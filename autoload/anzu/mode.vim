@@ -54,11 +54,11 @@ function! s:silent_substitute(range, pattern, string, flags)
 	try
 		let old_search_pattern = @/
 		silent execute printf('%ss/%s/%s/%s', a:range, a:pattern, a:string, a:flags)
-		call histdel("search", -1)
 		return 1
 	catch
 		return 0
 	finally
+		call histdel("search", -1)
 		let @/ = old_search_pattern
 	endtry
 endfunction
