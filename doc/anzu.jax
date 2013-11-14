@@ -5,12 +5,14 @@ anzu.txt		検索時の位置情報を表示するプラグインです。
 
 概要				|anzu-introduction|
 使い方				|anzu-usage|
+anzu-mode			|anzu-mode|
 インターフェース		|anzu-interface|
   コマンド			  |anzu-commands|
   関数				  |anzu-functions|
   キーマッピング		  |anzu-key-mappings|
 設定				|anzu-setting|
   変数				  |anzu-variables|
+unite-anzu			|unite-anzu|
 
 
 ==============================================================================
@@ -377,14 +379,14 @@ Default: >
 	let g:anzu_no_match_word = ""
 <
 
-			*g:anzu_enable_CursorHold_AnzuUpdateSearchStatus*
-g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
-	1 が設定されていれば |CursorHold| 時に |:AnzuUpdateSearchStatusOutput|
+			*g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus*
+g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus
+	1 が設定されていれば |CursorMoved| 時に |:AnzuUpdateSearchStatusOutput|
 	を呼び出します。
 	カーソル移動するたびに検索結果を出力したい場合に使用して下さい。
 
 Default: >
-	let g:anzu_enable_CursorHold_AnzuUpdateSearchStatus = 0
+	let g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus = 0
 <
 
 g:airline#extensions#anzu#enabled	*g:airline#extensions#anzu#enabled*

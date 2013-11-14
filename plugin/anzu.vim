@@ -22,7 +22,7 @@ endfunction
 
 function! s:wrapscan_mes()
 	if !exists("s:start_pos") || !exists("s:is_back")
-		return
+		return ""
 	endif
 	let prev_pos = s:start_pos
 	let pos = getpos(".")
@@ -132,15 +132,15 @@ nnoremap <silent> <Plug>(anzu-smart-sign-matchline) :<C-u>AnzuSignMatchLine<CR>
 let g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
 \	= get(g: ,"anzu_enable_CursorHold_AnzuUpdateSearchStatus", 0)
 
+let g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus
+\	= get(g: ,"anzu_enable_CursorMoved_AnzuUpdateSearchStatus", 0)
+
 augroup anzu
 	autocmd!
 	autocmd CursorMoved *
 \		if g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
-\|			if anzu#update(@/, getpos("."), s:wrapscan_mes()) != -1
-\|				echo anzu#search_status()
-\|			else
-\|				echo g:anzu_no_match_word
-\|			endif
+\		|| g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus
+\|			AnzuUpdateSearchStatusOutput
 \|		endif
 
 	if exists("##TextChanged")
@@ -157,7 +157,6 @@ augroup END
 
 nnoremap <silent> <Plug>(anzu-mode-n) :<C-u>call anzu#mode#start(@/, "n", "", "")<CR>
 nnoremap <silent> <Plug>(anzu-mode-N) :<C-u>call anzu#mode#start(@/, "N", "", "")<CR>
-
 
 
 let &cpo = s:save_cpo
