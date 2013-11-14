@@ -21,7 +21,9 @@ endfunction
 function! anzu#mode#start(pattern, key, prefix, suffix)
 	try
 		call s:init(a:pattern)
-		execute "normal! " . a:prefix . a:key . a:suffix
+		if !empty(a:prefix) | execute "normal!" a:prefix | endif
+		if !empty(a:key)    | execute "normal!" a:key | endif
+		if !empty(a:suffix) | execute "normal!" a:suffix | endif
 		call s:hl_cursor("Cursor", getpos(".")[1:])
 	catch
 		call s:finish()
@@ -47,6 +49,25 @@ endfunction
 function! anzu#mode#counter()
 	let s:count += 1
 	return s:count
+endfunction
+
+
+
+function! s:substitute(range, pattern, string, flags)
+	if a:range ==# "%"
+		let first = 1
+		let last  = "$"
+	elseif a:range =~ '\s*\d+\s*[,;]\s*\d+\s*'
+		echo matchlist(a:range, '\s*\(\d+\)\s*,\s*\(\d+\)\s*')
+		let [first, last] = matchlist("12123  ,2", '\s*\(\d*\)\s*,\s*\(\d*\)\s*')
+	elseif empty(a:range)
+		let first = line('.')
+		let last  = line('.')
+	else
+		let first = 1
+		let last  = "$"
+	endif
+	return map(split(substitute(join(getline(first, last), "\n"), a:pattern, a:string, a:flags), "\n", 1), "setline(v:key + first, v:val)")
 endfunction
 
 
