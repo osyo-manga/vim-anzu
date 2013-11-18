@@ -79,7 +79,9 @@ anzu-mode					*anzu-mode*
 す。
  >
 	" anzu-mode を開始する
-	call anzu#mode#start("anzu", )
+	" "anzu" で検索を行ってから n で移動を行い
+	" anzu-mode になります
+	call anzu#mode#start("anzu", "n", "", "")
 
 	" n の後に anzu-mode を開始する
 	nmap n <Plug>(anzu-mode-n)
