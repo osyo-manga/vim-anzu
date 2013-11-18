@@ -13,6 +13,9 @@ function! anzu#clear_search_status()
 endfunction
 
 function! anzu#echohl_search_status()
+	if empty(s:status_cache)
+		return
+	endif
 	let text = s:status_cache
 	try
 		let len = 0

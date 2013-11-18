@@ -383,9 +383,10 @@ Default: >
 
 			*g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus*
 g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus
-	1 が設定されていれば |CursorMoved| 時に |:AnzuUpdateSearchStatusOutput|
-	を呼び出します。
-	カーソル移動するたびに検索結果を出力したい場合に使用して下さい。
+	1 が設定されていれば |CursorMoved| 時にチェックを行い、カーソル位置と
+	検索したワードの位置が同じであれば検索結果を出力します。
+	|n| 等を再マップしたくない場合などカーソル移動するたびに検索結果を出力
+	したい場合に使用して下さい。
 
 Default: >
 	let g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus = 0

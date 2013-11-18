@@ -140,7 +140,9 @@ augroup anzu
 	autocmd CursorMoved *
 \		if g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
 \		|| g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus
-\|			AnzuUpdateSearchStatusOutput
+\|			if anzu#update(@/, getpos("."), s:wrapscan_mes()) != -1
+\|				call feedkeys(":call anzu#echohl_search_status()\<CR>")
+\|			endif
 \|		endif
 
 	if exists("##TextChanged")
