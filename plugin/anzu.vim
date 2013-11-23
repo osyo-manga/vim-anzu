@@ -141,7 +141,7 @@ augroup anzu
 \		if g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
 \		|| g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus
 \|			if anzu#update(@/, getpos("."), s:wrapscan_mes()) != -1
-\|				call feedkeys(":call anzu#echohl_search_status()\<CR>")
+\|				call feedkeys(":call anzu#echohl_search_status()\<CR>", "n")
 \|			endif
 \|		endif
 
