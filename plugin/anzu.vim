@@ -138,8 +138,9 @@ let g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus
 augroup anzu
 	autocmd!
 	autocmd CursorMoved *
-\		if g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
-\		|| g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus
+\		if mode() ==# "n"
+\		&& (g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
+\		||  g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus)
 \|			if anzu#update(@/, getpos("."), s:wrapscan_mes()) != -1
 \|				call feedkeys(":call anzu#echohl_search_status()\<CR>", "n")
 \|			endif
