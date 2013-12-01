@@ -68,25 +68,25 @@ nnoremap <silent> <Plug>(anzu-clear-search-cache) :<C-u>AnzuClearSearchCache<CR>
 
 
 nnoremap <silent><expr> <Plug>(anzu-star)
-\	":\<C-u>call \<SID>push_pos(0)\<CR>:normal! " . v:count1 . "*<CR>:<C-u>AnzuUpdateSearchStatus<CR>"
+\	":\<C-u>call \<SID>push_pos(0)\<CR>:normal! " . v:count1 . "*\<CR>:\<C-u>AnzuUpdateSearchStatus\<CR>"
 
 nmap <silent> <Plug>(anzu-star-with-echo)
 \	<Plug>(anzu-star)<Plug>(anzu-echo-search-status)
 
 nnoremap <silent><expr> <Plug>(anzu-sharp)
-\	":\<C-u>call \<SID>push_pos(1)\<CR>:normal! " . v:count1 . "#<CR>:<C-u>AnzuUpdateSearchStatus<CR>"
+\	":\<C-u>call \<SID>push_pos(1)\<CR>:normal! " . v:count1 . "#\<CR>:\<C-u>AnzuUpdateSearchStatus<CR>"
 
 nmap <silent> <Plug>(anzu-sharp-with-echo)
 \	<Plug>(anzu-sharp)<Plug>(anzu-echo-search-status)
 
 nnoremap <silent><expr> <Plug>(anzu-n)
-\	":\<C-u>call \<SID>push_pos(0)\<CR>:normal! " . v:count1 . "n<CR>:<C-u>AnzuUpdateSearchStatus<CR>"
+\	":\<C-u>call \<SID>push_pos(0)\<CR>:normal! " . v:count1 . "n\<CR>:\<C-u>AnzuUpdateSearchStatus\<CR>"
 
 nmap <silent> <Plug>(anzu-n-with-echo)
 \	<Plug>(anzu-n)<Plug>(anzu-echo-search-status)
 
 nnoremap <silent><expr> <Plug>(anzu-N)
-\	":\<C-u>call \<SID>push_pos(1)\<CR>:normal! " . v:count1 . "N<CR>:<C-u>AnzuUpdateSearchStatus<CR>"
+\	":\<C-u>call \<SID>push_pos(1)\<CR>:normal! " . v:count1 . "N\<CR>:\<C-u>AnzuUpdateSearchStatus\<CR>"
 
 
 nmap <silent> <Plug>(anzu-N-with-echo)
