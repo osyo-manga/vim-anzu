@@ -121,6 +121,7 @@ function! anzu#jump_key(key, count)
 				execute "normal" a:key
 			catch
 				echohl ErrorMsg | echo matchstr(v:exception, 'Vim(normal):\zs.*\ze') | echohl None
+				call anzu#clear_search_status()
 				return -1
 			endtry
 " 			execute "normal" a:key
