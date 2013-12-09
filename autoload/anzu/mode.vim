@@ -94,6 +94,12 @@ function! s:reset_options(option, value)
 	call setbufvar(bufnr, a:option, a:value)
 endfunction
 
+
+function! s:matchlines(pattern)
+	return map(map(anzu#searchpos(a:pattern), "v:val[0]"), "[v:val, getline(v:val)]")
+endfunction
+
+
 function! s:init(pattern)
 	if get(s:, "anzu_mode", 0)
 		return
@@ -104,6 +110,9 @@ function! s:init(pattern)
 	call s:reset_options("&modified", 0)
 	call s:reset_options("&readonly", 0)
 	call s:reset_options("&spell", 0)
+
+	silent! undojoin
+	let s:buffer_text = s:matchlines(a:pattern)
 
 	let format = "%s(%d\\/%d)"
 	let len = len(anzu#searchpos(a:pattern))
@@ -124,18 +133,11 @@ function! s:init(pattern)
 endfunction
 
 
-function! s:silent_undo()
-	let pos = getpos(".")
-	redir => _
-	silent undo
-	redir END
-	call setpos(".", pos)
-endfunction
-
-
 function! s:finish()
 	if get(s:, "undo_flag", 0)
-		call s:silent_undo()
+		silent! undojoin
+		call map(s:buffer_text, 'setline(v:val[0], v:val[1])')
+		silent exec 'normal!' "i\<C-g>u\<ESC>"
 		let &modified = 1
 	endif
 
