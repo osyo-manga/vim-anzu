@@ -137,7 +137,7 @@ endfunction
 function! s:finish()
 	if get(s:, "undo_flag", 0)
 		call map(s:buffer_text, 'setline(v:val[0], v:val[1])')
-		execute "rundo" s:undo_file
+		silent execute "rundo" s:undo_file
 		let &modified = 1
 	endif
 
