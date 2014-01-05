@@ -111,8 +111,9 @@ function! s:init(pattern)
 	call s:reset_options("&readonly", 0)
 	call s:reset_options("&spell", 0)
 
-	silent! undojoin
 	let s:buffer_text = s:matchlines(a:pattern)
+	let s:undo_file = tempname()
+	execute "wundo" s:undo_file
 
 	let format = "%s(%d\\/%d)"
 	let len = len(anzu#searchpos(a:pattern))
@@ -135,9 +136,8 @@ endfunction
 
 function! s:finish()
 	if get(s:, "undo_flag", 0)
-		silent! undojoin
 		call map(s:buffer_text, 'setline(v:val[0], v:val[1])')
-		silent exec 'normal!' "i\<C-g>u\<ESC>"
+		execute "rundo" s:undo_file
 		let &modified = 1
 	endif
 
