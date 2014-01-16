@@ -41,6 +41,7 @@ function! anzu#mode#start(pattern, key, prefix, suffix)
 			call feedkeys(char, "n")
 		endif
 	catch /^Vim\%((\a\+)\)\=:E132/
+		call s:finish()
 		return feedkeys(":call anzu#mode#start(".string(a:pattern).", ".string(char).")\<CR>", "n")
 	endtry
 endfunction
