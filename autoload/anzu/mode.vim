@@ -25,9 +25,9 @@ function! anzu#mode#start(pattern, key, prefix, suffix)
 		if !empty(a:key)    | execute "normal!" a:key | endif
 		if !empty(a:suffix) | execute "normal!" a:suffix | endif
 		call s:hl_cursor("Cursor", getpos(".")[1:])
-	catch
+	catch /^Vim\%((\a\+)\)\=:E486/
 		call s:finish()
-
+		echom v:throwpoint . " " . v:exception
 		echohl ErrorMsg | echo matchstr(v:exception, '^Vim(normal):\zs.*\ze$') | echohl None
 		return
 	endtry
@@ -114,7 +114,7 @@ function! s:init(pattern)
 
 	let s:buffer_text = s:matchlines(a:pattern)
 	let s:undo_file = tempname()
-	execute "wundo" s:undo_file
+	execute "wundo!" s:undo_file
 
 	let format = "%s(%d\\/%d)"
 	let len = len(anzu#searchpos(a:pattern))
@@ -141,6 +141,7 @@ function! s:finish()
 		if exists("s:undo_file")
 \		&& filereadable(s:undo_file)
 			silent execute "rundo" s:undo_file
+			call delete(s:undo_file)
 		endif
 		let &modified = 1
 	endif
