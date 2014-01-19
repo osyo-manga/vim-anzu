@@ -34,7 +34,7 @@ function! anzu#mode#start(pattern, key, prefix, suffix)
 	redraw
 	let char = s:getchar()
 	try
-		if char == "n"
+		if char == "n" || char == "N"
 			call anzu#mode#start(a:pattern, char, a:prefix, a:suffix)
 		else
 			call s:finish()
