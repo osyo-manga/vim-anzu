@@ -112,7 +112,6 @@ function! s:init(pattern)
 	call s:reset_options("&readonly", 0)
 	call s:reset_options("&spell", 0)
 
-	let s:buffer_text = s:matchlines(a:pattern)
 	let s:undo_file = tempname()
 	execute "wundo!" s:undo_file
 
@@ -135,9 +134,18 @@ function! s:init(pattern)
 endfunction
 
 
+function! s:silent_undo()
+	let pos = getpos(".")
+	redir => _
+	silent undo
+	redir END
+	call setpos(".", pos)
+endfunction
+
+
 function! s:finish()
 	if get(s:, "undo_flag", 0)
-		call map(s:buffer_text, 'setline(v:val[0], v:val[1])')
+		call s:silent_undo()
 		if exists("s:undo_file")
 \		&& filereadable(s:undo_file)
 			silent execute "rundo" s:undo_file
