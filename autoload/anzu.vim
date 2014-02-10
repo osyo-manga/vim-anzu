@@ -139,6 +139,10 @@ endfunction
 
 function! s:searchpos(pattern, ...)
 	let bufnr = get(a:, 1, bufnr("%"))
+	let uncache = get(a:, 2, 0)
+	if uncache
+		return s:searchpos_all(a:pattern)
+	endif
 	let cache = getbufvar(bufnr, "anzu_searchpos_cache")
 	if type(cache) == type("")
 		unlet cache

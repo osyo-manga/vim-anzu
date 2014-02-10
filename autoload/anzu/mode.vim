@@ -43,7 +43,12 @@ function! anzu#mode#start(pattern, key, prefix, suffix)
 		redraw
 		let char = s:getchar()
 	endwhile
+	let cnt = index(anzu#searchpos(a:pattern, bufnr("%"), 1), getpos(".")[1:2])
 	call s:finish()
+	if cnt >= 0
+		let pos = anzu#getpos(a:pattern, cnt)
+		call cursor(pos[0], pos[1])
+	endif
 	call feedkeys(char, "n")
 endfunction
 
