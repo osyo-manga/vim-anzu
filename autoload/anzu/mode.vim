@@ -18,32 +18,33 @@ function! s:hl_cursor(hl, pos)
 endfunction
 
 
+function! s:jump(prefix, key, suffix)
+	if !empty(a:prefix) | execute "normal!" a:prefix | endif
+	if !empty(a:key)    | execute "normal!" a:key | endif
+	if !empty(a:suffix) | execute "normal!" a:suffix | endif
+endfunction
+
+
 function! anzu#mode#start(pattern, key, prefix, suffix)
 	try
 		call s:init(a:pattern)
-		if !empty(a:prefix) | execute "normal!" a:prefix | endif
-		if !empty(a:key)    | execute "normal!" a:key | endif
-		if !empty(a:suffix) | execute "normal!" a:suffix | endif
+		call s:jump(a:prefix, a:key, a:suffix)
 		call s:hl_cursor("Cursor", getpos(".")[1:])
 	catch /^Vim\%((\a\+)\)\=:E486/
 		call s:finish()
-		echom v:throwpoint . " " . v:exception
 		echohl ErrorMsg | echo matchstr(v:exception, '^Vim(normal):\zs.*\ze$') | echohl None
 		return
 	endtry
 	redraw
 	let char = s:getchar()
-	try
-		if char == "n" || char == "N"
-			call anzu#mode#start(a:pattern, char, a:prefix, a:suffix)
-		else
-			call s:finish()
-			call feedkeys(char, "n")
-		endif
-	catch /^Vim\%((\a\+)\)\=:E132/
-		call s:finish()
-		return feedkeys(":call anzu#mode#start(".string(a:pattern).", ".string(char).")\<CR>", "n")
-	endtry
+	while char == "n" || char == "N"
+		call s:jump(a:prefix, char, a:suffix)
+		call s:hl_cursor("Cursor", getpos(".")[1:])
+		redraw
+		let char = s:getchar()
+	endwhile
+	call s:finish()
+	call feedkeys(char, "n")
 endfunction
 
 
