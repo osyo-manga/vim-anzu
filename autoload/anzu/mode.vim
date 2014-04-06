@@ -2,6 +2,49 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
+function! s:pos_less_equal(a, b)
+	return a:a[0] == a:b[0] ? a:a[1] <= a:b[1] : a:a[0] <= a:b[0]
+endfunction
+
+
+function! s:get_text_from_region(first, last, ...)
+	let wise = get(a:, 1, "v")
+
+	let old_selection = &selection
+	let &selection = 'inclusive'
+
+	let register = v:register == "" ? '"' : v:register
+	let old_pos = getpos(".")
+	let old_reg = getreg(register)
+	let old_first = getpos("'[")
+	let old_last  = getpos("']")
+	try
+		call setpos("'[", a:first)
+		call setpos("']", a:last)
+		execute printf('silent normal! `[%s`]y', wise)
+		return getreg(register)
+	finally
+		call setpos("'[", old_first)
+		call setpos("']", old_last)
+		call setreg(register, old_reg)
+		call setpos(".", old_pos)
+		let &selection = old_selection
+	endtry
+endfunction
+
+
+function! s:get_text_from_pattern(pattern, ...)
+	let wise = get(a:, 1, "v")
+	let first = searchpos(a:pattern, "Wncb")
+	if first == [0, 0]
+		return ""
+	endif
+	let last = searchpos(a:pattern, "Wnce")
+	if last == [0, 0]
+		return ""
+	endif
+	return s:get_text_from_region([0] + first + [0], [0] + last + [0], wise)
+endfunction
 
 
 function! s:getchar()
@@ -20,7 +63,14 @@ endfunction
 
 function! s:jump(prefix, key, suffix)
 	if !empty(a:prefix) | execute "normal!" a:prefix | endif
-	if !empty(a:key)    | execute "normal!" a:key | endif
+	while 1
+		if !empty(a:key) | execute "normal!" a:key | endif
+		let pattern = '(\d\+/\d\+)'
+		let text = s:get_text_from_pattern(pattern)
+		if text == "" || text !~ '^' . pattern . '$'
+			break
+		endif
+	endwhile
 	if !empty(a:suffix) | execute "normal!" a:suffix | endif
 endfunction
 
@@ -46,10 +96,13 @@ function! anzu#mode#start(pattern, key, prefix, suffix)
 	let cnt = index(anzu#searchpos(a:pattern, bufnr("%"), 1), getpos(".")[1:2])
 	call s:finish()
 	if cnt >= 0
+		echom cnt
 		let pos = anzu#getpos(a:pattern, cnt)
-		call cursor(pos[0], pos[1])
+		if !empty(pos)
+			call cursor(pos[0], pos[1])
+		endif
 	endif
-	call feedkeys(char, "n")
+	call feedkeys(char)
 endfunction
 
 
