@@ -135,6 +135,11 @@ let g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
 let g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus
 \	= get(g: ,"anzu_enable_CursorMoved_AnzuUpdateSearchStatus", 0)
 
+
+noremap <expr><silent> <Plug>(anzu-echohl_search_status)
+\	(mode() =~ '[iR]' ? "\<C-o>" : "") . ":call anzu#echohl_search_status()\<CR>"
+
+
 augroup anzu
 	autocmd!
 	autocmd CursorMoved *
@@ -142,7 +147,7 @@ augroup anzu
 \		&& (g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
 \		||  g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus)
 \|			if anzu#update(@/, getpos("."), s:wrapscan_mes()) != -1
-\|				call feedkeys(":call anzu#echohl_search_status()\<CR>", "n")
+\|				call feedkeys("\<Plug>(anzu-echohl_search_status)")
 \|			endif
 \|		endif
 
