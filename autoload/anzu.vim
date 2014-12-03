@@ -133,7 +133,7 @@ endfunction
 function! anzu#mapexpr_jump(...)
 	let l:count  = get(a:, 1, "")
 	let key = get(a:, 2, "")
-	return ":\<C-u>if anzu#jump_key(\"" . key . "\", " . count . ") != -1 \<Bar> set hlsearch \<Bar> endif\<CR>"
+	return ":\<C-u>if anzu#jump_key(\"" . key . "\", " . l:count . ") != -1 \<Bar> set hlsearch \<Bar> endif\<CR>"
 endfunction
 
 
