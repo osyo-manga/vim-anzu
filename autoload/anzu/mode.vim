@@ -242,5 +242,10 @@ function! anzu#mode#mapexpr(key, prefix, suffix)
 endfunction
 
 
+function! anzu#mode#start_from_incsearch_keymapping_expr(next_key)
+	silent! call anzu#mode#start(@/, "n", "", "", "\<C-n>")
+	return ""
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
