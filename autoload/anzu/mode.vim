@@ -75,7 +75,8 @@ function! s:jump(prefix, key, suffix)
 endfunction
 
 
-function! anzu#mode#start(pattern, key, prefix, suffix)
+function! anzu#mode#start(pattern, key, prefix, suffix, ...)
+	let next_key = get(a:, 1, "n")
 	try
 		call s:init(a:pattern)
 		call s:jump(a:prefix, a:key, a:suffix)
@@ -87,8 +88,12 @@ function! anzu#mode#start(pattern, key, prefix, suffix)
 	endtry
 	redraw
 	let char = s:getchar()
-	while char == "n" || char == "N"
-		call s:jump(a:prefix, char, a:suffix)
+	while char ==# next_key || char ==# "N"
+		if char == next_key
+			call s:jump(a:prefix, "n", a:suffix)
+		else
+			call s:jump(a:prefix, char, a:suffix)
+		endif
 		call s:hl_cursor("Cursor", getpos(".")[1:])
 		redraw
 		let char = s:getchar()
@@ -117,8 +122,7 @@ function! s:substitute(range, pattern, string, flags)
 		let first = 1
 		let last  = "$"
 	elseif a:range =~ '\s*\d+\s*[,;]\s*\d+\s*'
-		echo matchlist(a:range, '\s*\(\d+\)\s*,\s*\(\d+\)\s*')
-		let [first, last] = matchlist("12123  ,2", '\s*\(\d*\)\s*,\s*\(\d*\)\s*')
+		let [first, last] = matchlist(a:range, '\s*\(\d*\)\s*,\s*\(\d*\)\s*')
 	elseif empty(a:range)
 		let first = line('.')
 		let last  = line('.')
