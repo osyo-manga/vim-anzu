@@ -76,7 +76,8 @@ endfunction
 
 
 function! anzu#mode#start(pattern, key, prefix, suffix, ...)
-	let next_key = get(a:, 1, "n")
+	let forward_key = get(a:, 1, "n")
+	let back_key = get(a:, 2, "N")
 	try
 		call s:init(a:pattern)
 		call s:jump(a:prefix, a:key, a:suffix)
@@ -88,9 +89,11 @@ function! anzu#mode#start(pattern, key, prefix, suffix, ...)
 	endtry
 	redraw
 	let char = s:getchar()
-	while char ==# next_key || char ==# "N"
-		if char == next_key
+	while char ==# forward_key || char ==# back_key
+		if char ==# forward_key
 			call s:jump(a:prefix, "n", a:suffix)
+		elseif char ==# back_key
+			call s:jump(a:prefix, "N", a:suffix)
 		else
 			call s:jump(a:prefix, char, a:suffix)
 		endif
@@ -242,8 +245,8 @@ function! anzu#mode#mapexpr(key, prefix, suffix)
 endfunction
 
 
-function! anzu#mode#start_from_incsearch_keymapping_expr(next_key)
-	silent! call anzu#mode#start(@/, "n", "", "", "\<C-n>")
+function! anzu#mode#start_from_incsearch_keymapping_expr(forward_key, back_key)
+	silent! call anzu#mode#start(@/, "n", "", "", a:forward_key, a:back_key)
 	return ""
 endfunction
 
