@@ -334,6 +334,9 @@ Example: >
 <Plug>(anzu-mode-N)				*<Plug>(anzu-mode-N)*
 	|anzu-mode| を開始し、直後 |N| で移動します。
 
+<Plug>(anzu-mode)				*<Plug>(anzu-mode)*
+	|anzu-mode| を開始しますが、カーソルの移動は行ないません。
+
 
 ==============================================================================
 設定						*anzu-setting*

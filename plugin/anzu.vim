@@ -165,6 +165,7 @@ augroup END
 
 nnoremap <silent> <Plug>(anzu-mode-n) :<C-u>call anzu#mode#start(@/, "n", "", "")<CR>
 nnoremap <silent> <Plug>(anzu-mode-N) :<C-u>call anzu#mode#start(@/, "N", "", "")<CR>
+nnoremap <silent> <Plug>(anzu-mode) :<C-u>call anzu#mode#start(@/, "", "", "")<CR>
 
 
 let &cpo = s:save_cpo
