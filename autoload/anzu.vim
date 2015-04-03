@@ -43,16 +43,16 @@ function! s:pos_less_equal(a, b)
 endfunction
 
 
-function! s:search_less_pos(pos_list, pos)
-	let index = 0
-	for pos in a:pos_list
-		if s:pos_less_equal(a:pos, pos)
-			return index
-		endif
-		let index = index + 1
-	endfor
-	return -1
-endfunction
+" function! s:search_less_pos(pos_list, pos)
+" 	let index = 0
+" 	for pos in a:pos_list
+" 		if s:pos_less_equal(a:pos, pos)
+" 			return index
+" 		endif
+" 		let index = index + 1
+" 	endfor
+" 	return -1
+" endfunction
 
 
 function! s:print_status(format, pattern, index, len, wrap)
@@ -64,6 +64,26 @@ function! s:print_status(format, pattern, index, len, wrap)
 	let result = substitute(result, '%p', a:pattern, "g")
 	return result
 endfunction
+
+
+function! s:clamp_pos(pos, min, max)
+	return s:pos_less_equal(a:min, a:pos) && s:pos_less_equal(a:pos, a:max)
+endfunction
+
+
+function! anzu#get_on_pattern_pos(pat)
+	let pos = getpos(".")
+	let first = searchpos(a:pat, 'nWbc')
+	let last  = searchpos(a:pat, 'nWeb')
+	if s:pos_less_equal(last, first)
+		let last  = searchpos(a:pat, 'nWec')
+	endif
+	if s:clamp_pos(pos[1:2], first, last)
+		return [0, first[0], first[1], 0]
+	endif
+	return pos
+endfunction
+
 
 function! anzu#update(pattern, cursor_pos, ...)
 	let pattern = a:pattern

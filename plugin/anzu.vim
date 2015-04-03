@@ -49,11 +49,15 @@ let g:anzu_bottomtop_word = get(g:, "anzu_bottomtop_word", "search hit BOTTOM, c
 let g:anzu_topbottom_word = get(g:, "anzu_topbottom_word", "search hit TOP, continuing at BOTTOM")
 
 
+
 command! -bar AnzuClearSearchStatus call anzu#clear_search_status()
 command! -bar AnzuClearSearchCache call anzu#clear_search_cache()
 
-command! -bar AnzuUpdateSearchStatus call anzu#update(@/, getpos("."), s:wrapscan_mes())
-command! -bar AnzuUpdateSearchStatusOutput call anzu#update(@/, getpos("."), s:wrapscan_mes()) | call anzu#echohl_search_status()
+command! -bar AnzuUpdateSearchStatus
+\	call anzu#update(@/, anzu#get_on_pattern_pos(@/), s:wrapscan_mes())
+command! -bar AnzuUpdateSearchStatusOutput
+\	call anzu#update(@/, anzu#get_on_pattern_pos(@/), s:wrapscan_mes()) 
+\|		call anzu#echohl_search_status()
 
 
 nnoremap <silent> <Plug>(anzu-echo-search-status) :<C-u>call anzu#echohl_search_status()<CR>
@@ -146,7 +150,7 @@ augroup anzu
 \		if mode() ==# "n"
 \		&& (g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
 \		||  g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus)
-\|			if anzu#update(@/, getpos("."), s:wrapscan_mes()) != -1
+\|			if anzu#update(@/,  anzu#get_on_pattern_pos(@/), s:wrapscan_mes()) != -1
 \|				call feedkeys("\<Plug>(anzu-echohl_search_status)")
 \|			endif
 \|		endif
