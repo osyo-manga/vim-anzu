@@ -16,7 +16,7 @@ endfunction
 
 " a < b
 function! s:pos_less(a, b)
-	return a:a[0] == a:b[0] ? a:a[1] < a:b[1] : a:a[0] < a:b[0]
+	return a:a[1] == a:b[1] ? a:a[2] < a:b[2] : a:a[1] < a:b[1]
 endfunction
 
 
