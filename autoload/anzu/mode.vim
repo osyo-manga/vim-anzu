@@ -63,7 +63,6 @@ endfunction
 
 function! s:jump(prefix, key, suffix)
 	if !empty(a:prefix) | execute "normal!" a:prefix | endif
-	let view = winsaveview()
 	while 1
 		if !empty(a:key) | execute "normal!" a:key | endif
 		let pattern = '(\d\+/\d\+)'
@@ -72,7 +71,6 @@ function! s:jump(prefix, key, suffix)
 			break
 		endif
 	endwhile
-	call winrestview(view)
 	if !empty(a:suffix) | execute "normal!" a:suffix | endif
 endfunction
 
@@ -82,7 +80,9 @@ function! anzu#mode#start(pattern, key, prefix, suffix, ...)
 	let back_key = get(a:, 2, "N")
 	try
 		call s:init(a:pattern)
-		call s:jump(a:prefix, a:key, a:suffix)
+		if a:key != ""
+			call s:jump(a:prefix, a:key, a:suffix)
+		endif
 		call s:hl_cursor("Cursor", getpos(".")[1:])
 	catch /^Vim\%((\a\+)\)\=:E486/
 		call s:finish()
