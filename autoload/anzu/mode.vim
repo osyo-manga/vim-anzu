@@ -63,6 +63,7 @@ endfunction
 
 function! s:jump(prefix, key, suffix)
 	if !empty(a:prefix) | execute "normal!" a:prefix | endif
+	let view = winsaveview()
 	while 1
 		if !empty(a:key) | execute "normal!" a:key | endif
 		let pattern = '(\d\+/\d\+)'
@@ -71,6 +72,7 @@ function! s:jump(prefix, key, suffix)
 			break
 		endif
 	endwhile
+	call winrestview(view)
 	if !empty(a:suffix) | execute "normal!" a:suffix | endif
 endfunction
 
