@@ -62,6 +62,7 @@ function! s:print_status(format, pattern, index, len, wrap)
 	let result = substitute(result, '%l', a:len, "g")
 	let result = substitute(result, '%w', a:wrap, "g")
 	let result = substitute(result, '%p', a:pattern, "g")
+	let result = substitute(result, '%/', histget("search", -1), "g")
 	return result
 endfunction
 

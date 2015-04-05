@@ -350,6 +350,8 @@ g:anzu_status_format				*g:anzu_status_format*
 	シンボル	展開値~
 	--------	------~
 	%p		検索パターン
+	%/		%p と同等だが offset も付属される(histget("search",
+			-1) の値)
 	%i		現在の位置
 	%l		一致した個数
 	%#		強調グループ(see: 'statusline')

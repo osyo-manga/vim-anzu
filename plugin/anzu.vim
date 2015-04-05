@@ -39,7 +39,7 @@ function! s:wrapscan_mes()
 endfunction
 
 
-let g:anzu_status_format = get(g:, "anzu_status_format", "%p(%i/%l)")
+let g:anzu_status_format = get(g:, "anzu_status_format", '%/(%i/%l)')
 let g:anzu_search_limit  = get(g:, "anzu_search_limit", 1000)
 let g:anzu_no_match_word = get(g:, "anzu_no_match_word", "")
 
