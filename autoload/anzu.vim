@@ -61,8 +61,8 @@ function! s:print_status(format, pattern, index, len, wrap)
 	let result = substitute(result, '%i', a:index, "g")
 	let result = substitute(result, '%l', a:len, "g")
 	let result = substitute(result, '%w', a:wrap, "g")
+	let result = substitute(result, '%p', a:pattern, "g")
 	" Fix \<homu\> to view
-	let result = substitute(result, '%p', substitute(a:pattern, '\\', '\\\\', "g"), "g")
 	let result = substitute(result, '%/', substitute(histget("/", -1), '\\', '\\\\', "g"), "g")
 	return result
 endfunction
