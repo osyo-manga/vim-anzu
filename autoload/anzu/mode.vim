@@ -76,6 +76,9 @@ endfunction
 
 
 function! anzu#mode#start(pattern, key, prefix, suffix, ...)
+	if a:pattern == ""
+		return
+	endif
 	let forward_key = get(a:, 1, "n")
 	let back_key = get(a:, 2, "N")
 	try

@@ -74,6 +74,9 @@ endfunction
 
 
 function! anzu#get_on_pattern_pos(pat)
+	if a:pat == ""
+		return getpos(".")
+	endif
 	let pos = getpos(".")
 	let first = searchpos(a:pat, 'nWbc')
 	let last  = searchpos(a:pat, 'nWeb')
@@ -90,7 +93,7 @@ endfunction
 function! anzu#update(pattern, cursor_pos, ...)
 	let pattern = a:pattern
 	let cursor = a:cursor_pos
-	if empty(pattern)
+	if pattern == ""
 		return
 	endif
 
