@@ -24,6 +24,7 @@ set statusline=%{anzu#search_status()}
 
 
 " if start anzu-mode key mapping
+" anzu-mode is anzu(12/51) in screen
 " nmap n <Plug>(anzu-mode-n)
 " nmap N <Plug>(anzu-mode-N)
 ```
