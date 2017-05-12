@@ -1,0 +1,435 @@
+*anzu.txt*	A plug-in that displays the position information of search.
+
+==============================================================================
+CONTENTS					*anzu-contents*
+
+Introduction			|anzu-introduction|
+Usage				|anzu-usage|
+anzu-mode			|anzu-mode|
+Interface			|anzu-interface|
+  Commands			  |anzu-commands|
+  Functions			  |anzu-functions|
+  Key mappings			  |anzu-key-mappings|
+Settings			|anzu-setting|
+  Variables			  |anzu-variables|
+unite-anzu			|unite-anzu|
+
+
+==============================================================================
+Introduction					*anzu-introduction*
+
+*anzu* is a plug-in for assisting the search position visually and easily.
+Using |:sign| when searching t can display search position like (2/10) or
+display the position in the sidebar like a search in a browser.
+
+It basically remaps search command keys (|n|, |N|, etc.).
+
+-Requires
+ Vim version 7.3.867+
+
+
+==============================================================================
+Usage						*anzu-usage*
+
+Example: >
+	" Use it instead of n or N.
+	nmap n <Plug>(anzu-n)
+	nmap N <Plug>(anzu-N)
+	nmap * <Plug>(anzu-star)
+	nmap # <Plug>(anzu-sharp)
+
+	" If you want to output search status information with g*
+	nmap g* g*<Plug>(anzu-update-search-status-with-echo)
+
+	" Move to the [count] occurrence of the last searched word.
+	" 10<Leader>j move to the position of the tenth occurrence from
+	" the beginning
+	nmap <Leader>j <Plug>(anzu-jump)
+	" Output search status information to the command line
+	" nmap <Leader>j <Plug>(anzu-jump)<Plug>(anzu-echo-search-status)
+
+	" Display search status information to statusline
+	set statusline=%{anzu#search_status()}
+
+	" After the move, the search status information is output to
+	" the command line.
+	" nmap n <Plug>(anzu-n-with-echo)
+	" nmap N <Plug>(anzu-N-with-echo)
+	" nmap * <Plug>(anzu-star-with-echo)
+	" nmap # <Plug>(anzu-sharp-with-echo)
+
+	" Using together with sign
+	" nmap n <Plug>(anzu-n-with-echo)<Plug>(anzu-sign-matchline)
+	" nmap N <Plug>(anzu-N-with-echo)<Plug>(anzu-sign-matchline)
+
+
+==============================================================================
+anzu-mode					*anzu-mode*
+
+|anzu-mode| is the mode to display the number of occurrences next to the word
+you searched for.
+For example, if you search with /anzu,
+>
+	anzu(1/2)_homu
+	anzu(2/2)_mami
+<
+The number of occurrences is displayed next to the word searched in the
+buffer.
+
+To start this mode, you need to call the following function or mapping.
+ >
+	" To start anzu-mode:
+	" after searching with "anzu", move with n
+	" it will be anzu-mode
+	call anzu#mode#start("anzu", "n", "", "")
+
+	" Start anzu-mode after n
+	nmap n <Plug>(anzu-mode-n)
+	" Start anzu-mode after N
+	nmap N <Plug>(anzu-mode-N)
+<
+|anzu-mode| accepts only the |n| or |N| keys.
+If any other key is pressed, |anzu-mode| will exit.
+
+
+==============================================================================
+Interface					*anzu-interface*
+
+------------------------------------------------------------------------------
+Commands					*anzu-commands*
+
+:AnzuClearSearchStatus				*:AnzuClearSearchStatus*
+	Clear the search status information.
+
+:AnzuUpdateSearchStatus				*:AnzuUpdateSearchStatus*
+	Update the search status information at the current cursor position.
+	The information is updated only when the cursor position matches
+	the search position.
+
+	Also, since this command does not output search status information
+	use it in combination with |anzu#search_status()|.
+
+	Example: >
+		" Update each time the cursor moves
+		augroup anzu-update-search-status
+			autocmd!
+			autocmd CursorMoved *
+			\ :AnzuUpdateSearchStatus|echo anzu#search_status()
+		augroup END
+	<
+
+:AnzuSignMatchLine[!] [{pattern}]			*:AnzuSignMatchLine*
+	The line that matches the {pattern} in the buffer is |:sign| relative
+	to the position in the buffer.
+	(The search position is displayed in the sidebar like when searching
+	with tools such as browsers)
+
+	If [!] is used, |anzu#sign_matchline| is called, otherwise
+	|anzu#smart_sign_matchline| is used.
+	If you want to force |:sign| use [!].
+
+	Be aware that using |:sign| not by |anzu| may overwrite existing signs.
+	If there is no {pattern}, the value of |@/| is used.
+
+:AnzuClearSignMatchLine [{pattern}]		*:AnzuClearSignMatchLine*
+	Delete |:sign| was set by |anzu|.
+	Be aware that |:sign| which was set by something other than |anzu| may
+	also be deleted.
+	Also, if you use |:sign-unplace| to delete |:sign|,
+	|:AnzuSignMatchLine| may not work properly.
+	In that case, call this command and also |:AnzuSignMatchLine|.
+
+:AnzuClearSearchCache				*:AnzuClearSearchCache*
+	Clear the cache of the search information of the current buffer.
+
+:AnzuUpdateSearchStatusOutput			*AnzuUpdateSearchStatusOutput*
+	After |:AnzuUpdateSearchStatus| an |anzu#search_status()| will output
+	with |:echo|.
+
+
+------------------------------------------------------------------------------
+Functions					*anzu-functions*
+
+anzu#search_status()				*anzu#search_status()*
+	Returns the current search status information as a string.
+
+anzu#clear_search_status()			*anzu#clear_search_status()*
+	Clear the search status information.
+
+anzu#echohl_search_status()			*anzu#echohl_search_status()*
+	Highlight the status information with |:echohl| and output it.
+	The highlight group is set via |g:anzu_status_format|.
+
+anzu#sign_matchline({pattern})			*anzu#sign_matchline()*
+	|:sign| the position of {pattern}.
+
+anzu#smart_sign_matchline({pattern})		*anzu#smart_sign_matchline()*
+	|:sign| the position of {pattern}.
+	Basically it works the same as |anzu#sign_matchline|, but it is designed
+	not to waste |:sign| as much as possible.
+	(e.g. not |:sign| when the cursor does not go outside the window)
+
+	However, beware that |:sign| may not be set properly in some cases.
+	(e.g. when using |:sign-unplace| instead of |AnzuClearSignMatchLine|
+	to delete |:sign|)
+
+anzu#clear_sign_matchline()			*anzu#clear_sign_matchline()*
+	|:sign| delete.
+
+anzu#clear_search_cache([{bufnr}])		*anzu#clear_search_cache()*
+	Clear cache of search data of buffer number {bufnr}
+	This is called by |TextChanged| and |TextChangedI|.
+
+						*anzu#mode#start()*
+anzu#mode#start({pattern}, {key}, {prefix}, {suffix})
+	Start search with {pattern} in |anzu-mode|.
+	The key {key} is called first.
+	{prefix} and {suffix} are added as prefix and suffix respectively
+	when |n| and |N|are pressed with |anzu-mode|.
+Example: >
+	" Search anzu, move with n and enter anzu-mode
+	" when n or N is pressed in anzu-mode
+	" it is processed as nzzzv or Nzzzv
+	call anzu#mode#start("anzu", "n", "", "zzzv")
+<
+
+anzu#mode#mapexpr({key}, {prefix}, {suffix})	*anzu#mode#mapexpr()*
+	The behavior is the same as |anzu#mode#start()|, except using
+	|:map-<expr>|. |@/| is used for {pattern}.
+Example: >
+	" Processing as nzzzv when n is pressed in anzu-mode
+	nnoremap <expr> n anzu#mode#mapexpr("n", "", "zzzv")
+	" Processing as Nzzzv when N is pressed in anzu-mode
+	nnoremap <expr> N anzu#mode#mapexpr("N", "", "zzzv")
+
+
+------------------------------------------------------------------------------
+Key mappings					*anzu-key-mappings*
+
+<Plug>(anzu-update-search-status)		*<Plug>(anzu-update-search-status)*
+	Update the search status information.
+	Basically it is used in combination with |n| and |N|.
+	This mapping should be called after the move's mapping.
+
+Example: >
+	" Call after n or N.
+	nmap n n<Plug>(anzu-update-search-status)
+	nmap N N<Plug>(anzu-update-search-status)
+<
+
+<Plug>(anzu-clear-search-status)		*<Plug>(anzu-clear-search-status)*
+	Clear the search status information.
+
+<Plug>(anzu-clear-search-cache)			*<Plug>(anzu-clear-search-cache)*
+	Clear the cache of the search information of the current buffer.
+
+<Plug>(anzu-echo-search-status)			*<Plug>(anzu-echo-search-status)*
+	Search status information is output to the command line.
+	Note that search status information is not updated in this mapping.
+	Use |<Plug>(anzu-update-search-status-with-echo)|
+	when updating the search status information.
+
+Example: >
+	" Re-output the previous search status information
+	nmap <A-p> <Plug>(anzu-update-search-status-with-echo)
+<
+
+<Plug>(anzu-update-search-status-with-echo)	*<Plug>(anzu-update-search-status-with-echo)*
+	After updating the search status information, also output it to
+	the command line.
+	This mapping should be called after the move's mapping.
+
+Example: >
+	" Call after g*.
+	nmap g* g*<Plug>(anzu-update-search-status-with-echo)
+<
+
+<Plug>(anzu-n)					*<Plug>(anzu-n)*
+	Behavior similar to |n| except that |<Plug>(anzu-search-status-update)|
+	is hooked.
+
+<Plug>(anzu-n-with-echo)			*<Plug>(anzu-n-with-echo)*
+	Like |<Plug>(anzu-n)|, but also the search status information
+	will be output to the command line.
+
+<Plug>(anzu-N)					*<Plug>(anzu-N)*
+	Behavior similar to |N| except that |<Plug>(anzu-search-status-update)|
+        is hooked.
+
+<Plug>(anzu-N-with-echo)			*<Plug>(anzu-N-with-echo)*
+	Like |<Plug>(anzu-N)|, but also the search status information
+	will be output to the command line.
+
+<Plug>(anzu-star)				*<Plug>(anzu-star)*
+	Behavior similar to |star| except that
+	|<Plug>(anzu-search-status-update)| is hooked.
+
+<Plug>(anzu-star-with-echo)			*<Plug>(anzu-star-with-echo)*
+	Like |<Plug>(anzu-star)|, but also the search status information
+	will be output to the command line.
+
+<Plug>(anzu-sharp)				*<Plug>(anzu-sharp)*
+	Behavior similar to |#| except that |<Plug>(anzu-search-status-update)|
+        is hooked.
+
+<Plug>(anzu-sharp-with-echo)			*<Plug>(anzu-sharp-with-echo)*
+	Like |<Plug>(anzu-sharp)|, but also the search status information
+        will be output to the command line.
+
+<Plug>(anzu-sign-matchline)			*<Plug>(anzu-sign-matchline)*
+	|:AnzuSignMatchLine| with [!] is called.
+	|@/| is used as the argument of |:AnzuSignMatchLine|.
+	This mapping should be called after the move's mapping.
+
+Example: >
+	" Call after n or N.
+	nmap n n<Plug>(anzu-sign-matchline)
+	nmap N N<Plug>(anzu-sign-matchline)
+<
+
+<Plug>(anzu-clear-sign-matchline)		*<Plug>(anzu-clear-sign-matchline)*
+	|:AnzuClearSignMatchLine| is called.
+	Call |:AnzuSignMatchLine| with [!].
+
+<Plug>(anzu-smart-sign-matchline)		*<Plug>(anzu-smart-sign-matchline)*
+	Basically it is the same as |<Plug>(anzu-sign-matchline)|.
+	Call |:AnzuSignMatchLine| without [!].
+
+<Plug>(anzu-jump)				*<Plug>(anzu-jump)*
+	Move to the [count] position of the last searched word.
+	If [count] does not exist or is out of range, it will not move.
+Example: >
+	" Move to the position of [count] occurrence of the last searched word
+	" 10<Leader>j means move to the position of the tenth word from
+	" the beginning
+	nmap <Leader>j <Plug>(anzu-jump)
+	" To output search status information to the command line
+	" nmap <Leader>j <Plug>(anzu-jump)<Plug>(anzu-echo-search-status)
+<
+
+<Plug>(anzu-jump-n)				*<Plug>(anzu-jump-n)*
+	Move to the [count] position of the last searched word.
+	10<Plug>(anzu-jump-n) means move to the position of the tenth word
+	from the beginning of the buffer.
+	If there is no [count], use |<Plug>(anzu-n)| instead.
+	If [count] is out of range, it will not move.
+Example: >
+	nmap n <Plug>(anzu-jump-n)
+
+	" When you want to output the position to the command line
+	nmap n <Plug>(anzu-jump-n)<Plug>(anzu-echo-search-status)
+<
+<Plug>(anzu-jump-N)				*<Plug>(anzu-jump-N)*
+	It is the same as |<Plug>(anzu-jump-n)| except that |<Plug>(anzu-N)|
+	is used when there is no [count].
+
+<Plug>(anzu-jump-star)				*<Plug>(anzu-jump-star)*
+	Move to the [count] position of the word closest to the cursor.
+	It is the same as |<Plug>(anzu-jump-n)| except that |<Plug>(anzu-star)|
+	is used when there is no [count].
+
+<Plug>(anzu-jump-sharp)				*<Plug>(anzu-jump-sharp)*
+	It is the same as |<Plug>(anzu-jump-sharp)| except that
+	|<Plug>(anzu-sharp)| is used when there is no [count].
+
+<Plug>(anzu-mode-n)				*<Plug>(anzu-mode-n)*
+	Start |anzu-mode| and move right after |n|.
+
+<Plug>(anzu-mode-N)				*<Plug>(anzu-mode-N)*
+	Start |anzu-mode| and move right after |N|.
+
+<Plug>(anzu-mode)				*<Plug>(anzu-mode)*
+	|anzu-mode| is started but the cursor is not moved.
+
+
+==============================================================================
+Settings					*anzu-setting*
+
+------------------------------------------------------------------------------
+Variables					*anzu-variables*
+
+g:anzu_status_format				*g:anzu_status_format*
+	Set the format of status information.
+
+	Item		Meaning~
+	--------	------~
+	%p		Search pattern
+	%/		%p equivalent but offset is also included
+			(value of histget("search", -1))
+	%i		Current position
+	%l		Match quantity
+	%#		Highlight group (see: 'statusline')
+	%w		Message displayed when moving from the end to
+			the beginning or vice versa
+
+Default: >
+	let g:anzu_status_format = "%p(%i/%l)"
+
+	" highlight as "WarningMsg"
+	let g:anzu_status_format = "%#WarningMsg#%p(%i/%l)"
+<
+
+g:anzu_search_limit				*g:anzu_search_limit*
+	Sets the maximum number of words to search.
+	If more hits are made than the value set in this variable,
+	the search is terminated on the spot.
+	If the number of hits is too high and the operation slows down
+	set a lower value for this variable.
+
+Default: >
+	let g:anzu_search_limit = 1000
+<
+
+
+g:anzu_no_match_word				*g:anzu_no_match_word*
+	If there is no matches on search it will output this character string
+	via |anzu#search_status()| and |<Plug>(anzu-echo-search-status)|.
+	You can set symbols similar to |g:anzu_status_format|.
+
+Default: >
+	let g:anzu_no_match_word = ""
+<
+
+			*g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus*
+g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus
+	If set to 1, |CursorMoved| is checked at times, and if the position
+	of the cursor and the position of the searched word are the same,
+	the search result is output.
+	Use this when you want to output search results each time you move
+	the cursor, for example when you do not want to remap |n| etc.
+
+Default: >
+	let g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus = 0
+<
+
+g:airline#extensions#anzu#enabled	*g:airline#extensions#anzu#enabled*
+	Set whether to display search status information on |airline|.
+	Otherwise set to 0.
+
+g:anzu_bottomtop_word				*g:anzu_bottomtop_word*
+	This is a character string to be displayed when moving from the end
+	to the beginning with |<Plug>(anzu-n-with-echo)|.
+	It will replace %w in |g:anzu_status_format|.
+Default: >
+	let g:anzu_bottomtop_word = "search hit BOTTOM, continuing at TOP"
+<
+
+g:anzu_topbottom_word				*g:anzu_topbottom_word*
+	This is a character string to be displayed when moving from the
+	beginning to the end with |<Plug>(anzu-N-with-echo)|.
+	It will replace %w in |g:anzu_status_format|.
+Default: >
+	let g:anzu_topbottom_word = "search hit TOP, continuing at BOTTOM"
+<
+
+==============================================================================
+unite-anzu					*unite-anzu*
+
+>
+	" Output a line matching {pattern} in unite.vim
+	:Unite anzu:{pattern}
+<
+
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
