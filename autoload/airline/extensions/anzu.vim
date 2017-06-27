@@ -7,7 +7,7 @@ function! airline#extensions#anzu#init(ext)
 endfunction
 
 function! airline#extensions#anzu#apply(...)
-	call airline#extensions#prepend_to_section("z", "%{anzu#search_status()}")
-" 	let w:airline_section_z = ' %{anzu#search_status()} ' . get(w:, "airline_section_z", "") . get(g:, "airline_section_z", "")
+	let g:anzu_status_format='[%i/%l]'
+	let g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus=2
+	call airline#extensions#append_to_section("y", " %{anzu#search_status()}")
 endfunction
-
