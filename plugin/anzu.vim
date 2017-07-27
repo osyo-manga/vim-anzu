@@ -19,6 +19,23 @@ function! s:pos_less(a, b)
 	return a:a[1] == a:b[1] ? a:a[2] < a:b[2] : a:a[1] < a:b[1]
 endfunction
 
+function! s:update_search_status()
+  if mode() !=# 'n'
+    return
+  endif
+
+  let curs_hold = get(g:, 'anzu_enable_CursorHold_AnzuUpdateSearchStatus', 0)
+  let curs_mov  = get(g:, 'anzu_enable_CursorMoved_AnzuUpdateSearchStatus', 0)
+
+  let anzu_echo_output = (curs_hold == 1 || curs_mov == 1)
+
+  if curs_hold || curs_mov
+    if anzu#update(@/,  anzu#get_on_pattern_pos(@/), s:wrapscan_mes()) != -1
+\   && anzu_echo_output
+      call feedkeys("\<Plug>(anzu-echohl_search_status)")
+    endif
+  endif
+endfunction
 
 function! s:wrapscan_mes()
 	if !exists("s:start_pos") || !exists("s:is_back")
@@ -131,29 +148,13 @@ nnoremap <silent> <Plug>(anzu-clear-sign-matchline) :<C-u>AnzuClearSignMatchLine
 
 nnoremap <silent> <Plug>(anzu-smart-sign-matchline) :<C-u>AnzuSignMatchLine<CR>
 
-
-
-let g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
-\	= get(g: ,"anzu_enable_CursorHold_AnzuUpdateSearchStatus", 0)
-
-let g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus
-\	= get(g: ,"anzu_enable_CursorMoved_AnzuUpdateSearchStatus", 0)
-
-
 noremap <expr><silent> <Plug>(anzu-echohl_search_status)
 \	(mode() =~ '[iR]' ? "\<C-o>" : "") . ":call anzu#echohl_search_status()\<CR>"
 
 
 augroup anzu
 	autocmd!
-	autocmd CursorMoved *
-\		if mode() ==# "n"
-\		&& (g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
-\		||  g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus)
-\|			if anzu#update(@/,  anzu#get_on_pattern_pos(@/), s:wrapscan_mes()) != -1
-\|				call feedkeys("\<Plug>(anzu-echohl_search_status)")
-\|			endif
-\|		endif
+	autocmd CursorMoved * call <sid>update_search_status()
 
 	if exists("##TextChanged")
 		autocmd TextChanged * call anzu#clear_search_cache()

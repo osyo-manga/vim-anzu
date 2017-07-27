@@ -395,11 +395,26 @@ g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus
 	If set to 1, |CursorMoved| is checked at times, and if the position
 	of the cursor and the position of the searched word are the same,
 	the search result is output.
+	If set to 2, only the cache will be updated but it won't output
+	anything.
 	Use this when you want to output search results each time you move
 	the cursor, for example when you do not want to remap |n| etc.
 
 Default: >
 	let g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus = 0
+<
+			*g:anzu_enable_CursorHold_AnzuUpdateSearchStatus*
+g:anzu_enable_CursorHold_AnzuUpdateSearchStatus
+	If set to 1, |CursorHold| is checked at times, and if the position
+	of the cursor and the position of the searched word are the same,
+	the search result is output.
+	If set to 2, only the cache will be updated but it won't output
+	anything.
+	Use this when you want to output search results each time you move
+	the cursor, for example when you do not want to remap |n| etc.
+
+Default: >
+	let g:anzu_enable_CursorHold_AnzuUpdateSearchStatus = 0
 <
 
 g:airline#extensions#anzu#enabled	*g:airline#extensions#anzu#enabled*
