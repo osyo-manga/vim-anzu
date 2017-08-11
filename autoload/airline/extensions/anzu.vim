@@ -7,7 +7,5 @@ function! airline#extensions#anzu#init(ext)
 endfunction
 
 function! airline#extensions#anzu#apply(...)
-	let g:anzu_status_format='[%i/%l]'
-	let g:anzu_enable_CursorMoved_AnzuUpdateSearchStatus=2
 	call airline#extensions#append_to_section("y", " %{anzu#search_status()}")
 endfunction
