@@ -186,7 +186,8 @@ endfunction
 
 
 function! s:searchpos_all(pattern)
-	let old_pos =getpos(".")
+	" winsave view correctly restores curswant
+	let old_pos = winsaveview()
 	let result = []
 	try
 		call setpos(".", [0, line("$"), strlen(getline("$")), 0])
@@ -201,7 +202,7 @@ function! s:searchpos_all(pattern)
 			endif
 		endwhile
 	finally
-		call setpos(".", old_pos)
+		call winrestview(old_pos)
 	endtry
 	return result
 endfunction
