@@ -20,21 +20,26 @@ function! s:pos_less(a, b)
 endfunction
 
 function! s:update_search_status()
-  if mode() !=# 'n'
-    return
-  endif
+	if mode() !=# 'n'
+		return
+	endif
 
-  let curs_hold = get(g:, 'anzu_enable_CursorHold_AnzuUpdateSearchStatus', 0)
-  let curs_mov  = get(g:, 'anzu_enable_CursorMoved_AnzuUpdateSearchStatus', 0)
+	let curs_hold = get(g:, 'anzu_enable_CursorHold_AnzuUpdateSearchStatus', 0)
+	let curs_mov	= get(g:, 'anzu_enable_CursorMoved_AnzuUpdateSearchStatus', 0)
 
-  let anzu_echo_output = (curs_hold == 1 || curs_mov == 1)
+	let anzu_echo_output = (curs_hold == 1 || curs_mov == 1)
 
-  if curs_hold || curs_mov
-    if anzu#update(@/,  anzu#get_on_pattern_pos(@/), s:wrapscan_mes()) != -1
-\   && anzu_echo_output
-      call feedkeys("\<Plug>(anzu-echohl_search_status)")
-    endif
-  endif
+	try
+		if curs_hold || curs_mov
+			if anzu#update(@/,	anzu#get_on_pattern_pos(@/), s:wrapscan_mes()) != -1
+		\	 && anzu_echo_output
+				call feedkeys("\<Plug>(anzu-echohl_search_status)")
+			endif
+		endif
+	catch /^Vim\%((\a\+)\)\=:E/
+		echohl ErrorMsg | echo matchstr(v:exception, '^Vim(\a\+):\zs.*\ze$') | echohl None
+		return
+	endtry
 endfunction
 
 function! s:wrapscan_mes()
