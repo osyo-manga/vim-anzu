@@ -87,9 +87,9 @@ function! anzu#mode#start(pattern, key, prefix, suffix, ...)
 			call s:jump(a:prefix, a:key, a:suffix)
 		endif
 		call s:hl_cursor("Cursor", getpos(".")[1:])
-	catch /^Vim\%((\a\+)\)\=:E486/
+	catch /^Vim\%((\a\+)\)\=:E/
 		call s:finish()
-		echohl ErrorMsg | echo matchstr(v:exception, '^Vim(normal):\zs.*\ze$') | echohl None
+		echohl ErrorMsg | echo matchstr(v:exception, '^Vim(\a\+):\zs.*\ze$') | echohl None
 		return
 	endtry
 	redraw
