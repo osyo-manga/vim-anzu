@@ -421,6 +421,13 @@ g:airline#extensions#anzu#enabled	*g:airline#extensions#anzu#enabled*
 	Set whether to display search status information on |airline|.
 	Otherwise set to 0.
 
+g:anzu_airline_section				*g:anzu_airline_section*
+	Set the airline section to be used to display search status
+	information.
+Default: >
+	let g:anzu_airline_section = "y"
+<
+
 g:anzu_bottomtop_word				*g:anzu_bottomtop_word*
 	This is a character string to be displayed when moving from the end
 	to the beginning with |<Plug>(anzu-n-with-echo)|.
