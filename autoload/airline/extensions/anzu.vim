@@ -9,5 +9,5 @@ function! airline#extensions#anzu#init(ext)
 endfunction
 
 function! airline#extensions#anzu#apply(...)
-	call airline#extensions#append_to_section(g:anzu_airline_section, " %{anzu#search_status()}")
+	call airline#extensions#append_to_section(get(g:, "anzu_airline_section", "y"), " %{anzu#search_status()}")
 endfunction
