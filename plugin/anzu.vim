@@ -57,6 +57,10 @@ function! s:wrapscan_mes()
 	unlet s:start_pos
 	unlet s:is_back
 
+  if !empty(result) && exists('#User#AnzuWrap')
+    doautocmd User AnzuWrap
+  endif
+
 	return result
 endfunction
 
