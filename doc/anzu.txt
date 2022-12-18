@@ -10,6 +10,7 @@ Interface			|anzu-interface|
   Commands			  |anzu-commands|
   Functions			  |anzu-functions|
   Key mappings			  |anzu-key-mappings|
+  Autocommands			  |anzu-autocommands|
 Settings			|anzu-setting|
   Variables			  |anzu-variables|
 unite-anzu			|unite-anzu|
@@ -341,6 +342,20 @@ Example: >
 <Plug>(anzu-mode)				*<Plug>(anzu-mode)*
 	|anzu-mode| is started but the cursor is not moved.
 
+
+------------------------------------------------------------------------------
+Autocommands					*anzu-autocommands*
+
+AnzuWrap		            		*AnzuWrap*
+        An |User| autocommand, triggered when search has reached the end, and
+        moving to the other side.
+
+Example: >
+        augroup Anzu
+            autocmd!
+            autocmd User AnzuWrap call sound_playevent('bell')
+        augroup END
+<
 
 ==============================================================================
 Settings					*anzu-setting*

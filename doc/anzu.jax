@@ -10,6 +10,7 @@ anzu-mode			|anzu-mode|
   コマンド			  |anzu-commands|
   関数				  |anzu-functions|
   キーマッピング		  |anzu-key-mappings|
+  Autocommands			  |anzu-autocommands|
 設定				|anzu-setting|
   変数				  |anzu-variables|
 unite-anzu			|unite-anzu|
@@ -337,6 +338,20 @@ Example: >
 <Plug>(anzu-mode)				*<Plug>(anzu-mode)*
 	|anzu-mode| を開始しますが、カーソルの移動は行ないません。
 
+
+------------------------------------------------------------------------------
+Autocommands					*anzu-autocommands*
+
+AnzuWrap		            		*AnzuWrap*
+        An |User| autocommand, triggered when search has reached the end, and
+        moving to the other side.
+
+Example: >
+        augroup Anzu
+            autocmd!
+            autocmd User AnzuWrap call sound_playevent('bell')
+        augroup END
+<
 
 ==============================================================================
 設定						*anzu-setting*
